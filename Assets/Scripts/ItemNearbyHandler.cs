@@ -14,6 +14,7 @@ public class ItemNearbyHandler : MonoBehaviour
             Item item = other.GetComponent<Item>();
             Debug.Log("Item nearby: " + item.ItemType);
             _currentItemNearby = item;
+            _currentItemNearby.Highlight();
         }
     }
     
@@ -22,6 +23,7 @@ public class ItemNearbyHandler : MonoBehaviour
         if (other.CompareTag("Item") && other == _currentItemNearby.GetComponent<Collider2D>())
         {
             Debug.Log("Item not nearby");
+            _currentItemNearby.Unhighlight();
             _currentItemNearby = null;
         }
     }

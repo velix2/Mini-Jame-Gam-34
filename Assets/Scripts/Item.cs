@@ -4,13 +4,16 @@ using UnityEngine.Serialization;
 
 public abstract class Item : MonoBehaviour
 {
-    [SerializeField] private Renderer spriteRenderer;
+    [SerializeField] private SpriteRenderer spriteRenderer;
+    [SerializeField] private Sprite spriteHighlighted;
     private Collider2D _collider;
+    private Sprite _spriteDefault;
 
     public virtual void Awake()
     {
         Debug.Log("Item awake");
         _collider = GetComponent<Collider2D>();
+        _spriteDefault = spriteRenderer.sprite;
     }
 
     protected ItemType itemType;
@@ -37,5 +40,15 @@ public abstract class Item : MonoBehaviour
         _collider.enabled = true;
         spriteRenderer.enabled = true;
         transform.SetParent(null);
+    }
+    
+    public void Highlight()
+    {
+        spriteRenderer.sprite = spriteHighlighted;
+    }
+    
+    public void Unhighlight()
+    {
+        spriteRenderer.sprite = _spriteDefault;
     }
 }
