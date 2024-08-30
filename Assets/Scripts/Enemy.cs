@@ -16,12 +16,16 @@ public abstract class Enemy : MonoBehaviour
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private int maxHealth = 3;
     [SerializeField] private Renderer spriteRenderer;
+    [SerializeField] private float workSpeed = 1f;
+    
 
     private int _health = 3;
     private Rigidbody2D _rb;
     protected Vector2 _moveDirection;
     protected bool _isMoving;
     protected Phase _phase = Phase.ApproachArea;
+    protected Vector2 _workPosition;
+    private float _workCompletion = 0f;
 
     private void Awake()
     {
@@ -52,8 +56,11 @@ public abstract class Enemy : MonoBehaviour
     private void Kill()
     {
         if (_health > 0) return;
+        Dispose();
         Destroy(gameObject);
     }
+
+    protected abstract void Dispose();
 
     private void Update()
     {
@@ -78,14 +85,16 @@ public abstract class Enemy : MonoBehaviour
                 Work();
                 break;
             case Phase.Harvest:
+                Harvest();
                 break;
             case Phase.ReturnToBase:
+                ReturnToBase();
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
         }
     }
-    
+
     //TODO: Actually consider the area
     private void ApproachArea()
     {
@@ -99,11 +108,57 @@ public abstract class Enemy : MonoBehaviour
         }
     }
     
+    protected void SetMoveDirectionTowards(Vector2 target)
+    {
+        _moveDirection = (target - (Vector2) transform.position).normalized;
+    }
+    
     protected abstract void MoveToField();
     
     protected abstract void Wander();
+    
+    private void Work()
+    {
+        if (Vector2.Distance(transform.position, _workPosition) > 0.1f)
+        {
+            Debug.Log("Returning to work position");
+            _phase = Phase.MoveToField;
+            return;
+        }
+        Debug.Log("Working, completion: " + _workCompletion);
+        ProgressWork();
+        if (_workCompletion < 1f) return;
+        OnWorkCompleted();
+        _phase = Phase.Harvest;
+    }
 
-    protected abstract void Work();
+    protected abstract void OnWorkCompleted();
+
+    private void ProgressWork()
+    {
+        _workCompletion += Time.deltaTime * workSpeed;
+    }
+    
+    private void Harvest()
+    {
+        Debug.Log("Harvesting");
+        //TODO: Check for ripe tomatoes and proceed to harvest
+        //For now, just return to base
+        _phase = Phase.ReturnToBase;
+    }
+    
+    
+    private void ReturnToBase()
+    {
+        _isMoving = true;
+        SetMoveDirectionTowards(Vector2.left * 15f);
+
+        if (Vector2.Distance(transform.position, Vector2.left * 15f) < 0.1f)
+        {
+            Dispose();
+            Destroy(gameObject);
+        }
+    }
     
     private void FixedUpdate()
     {

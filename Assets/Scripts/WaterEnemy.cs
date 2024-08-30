@@ -1,5 +1,6 @@
 ﻿public class WaterEnemy : Enemy
 {
+
     protected override void MoveToField()
     {
         throw new System.NotImplementedException();
@@ -10,7 +11,12 @@
         throw new System.NotImplementedException();
     }
 
-    protected override void Work()
+    protected override void OnWorkCompleted()
+    {
+        throw new System.NotImplementedException();
+    }
+    
+    protected override void Dispose()
     {
         throw new System.NotImplementedException();
     }

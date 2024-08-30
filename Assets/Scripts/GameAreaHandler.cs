@@ -24,8 +24,8 @@ public class GameAreaHandler : MonoBehaviour
 
     private void Start()
     {
-        _topLeftCornerWorldPosition = FieldHandler.Instance.GetFieldTileAtGridPosition(topLeftCorner).transform.position;
-        _bottomRightCornerWorldPosition = FieldHandler.Instance.GetFieldTileAtGridPosition(bottomRightCorner).transform.position;
+        _topLeftCornerWorldPosition = FieldHandler.Instance.CellToWorld(topLeftCorner);
+        _bottomRightCornerWorldPosition = FieldHandler.Instance.CellToWorld(bottomRightCorner);
     }
     
     public bool IsPositionInsideGameArea(Vector3 position)
@@ -36,8 +36,15 @@ public class GameAreaHandler : MonoBehaviour
     
     public Vector3 GetRandomWorldPositionInsideGameArea()
     {
-        float randomX = UnityEngine.Random.Range(_topLeftCornerWorldPosition.x, _bottomRightCornerWorldPosition.x);
-        float randomY = UnityEngine.Random.Range(_bottomRightCornerWorldPosition.y, _topLeftCornerWorldPosition.y);
+        float randomX = UnityEngine.Random.Range(_topLeftCornerWorldPosition.x, _bottomRightCornerWorldPosition.x + 1);
+        float randomY = UnityEngine.Random.Range(_bottomRightCornerWorldPosition.y, _topLeftCornerWorldPosition.y + 1);
         return new Vector3(randomX, randomY, 0);
+    }
+    
+    public Vector3Int GetRandomCellPositionInsideGameArea()
+    {
+        int randomX = UnityEngine.Random.Range(topLeftCorner.x, bottomRightCorner.x + 1);
+        int randomY = UnityEngine.Random.Range(bottomRightCorner.y, topLeftCorner.y + 1);
+        return new Vector3Int(randomX, randomY, 0);
     }
 }

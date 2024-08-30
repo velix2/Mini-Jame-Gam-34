@@ -8,15 +8,21 @@ public class SowEnemy : Enemy
     
     private bool _hasTargetPosition = false;
     private Vector3 _targetPosition;
-    
+
+    //TODO: Create Reservation Feature here as well
+    protected override void Dispose()
+    {
+        
+    }
+
     protected override void MoveToField()
     {
         //Reached target position
         if (Vector2.Distance(transform.position, _targetPosition) < 0.1f)
         {
             _isMoving = false;
-            _hasTargetPosition = false;
             _phase = Phase.Work;
+            _workPosition = _targetPosition;
             Debug.Log("Working");
             return;
         }
@@ -44,8 +50,9 @@ public class SowEnemy : Enemy
         }
         
         _isMoving = true;
-        _moveDirection = ((Vector2)_targetPosition - (Vector2) transform.position).normalized;
+        SetMoveDirectionTowards(_targetPosition);
     }
+    
 
     //Wander to random position until field tiles exist
     protected override void Wander()
@@ -58,12 +65,9 @@ public class SowEnemy : Enemy
         Debug.Log("Moving to field");
     }
 
-    protected override void Work()
+    protected override void OnWorkCompleted()
     {
-        if (Vector2.Distance(transform.position, _targetPosition) > 0.1f)
-        {
-            _phase = Phase.MoveToField;
-        }
+        
     }
     
 }

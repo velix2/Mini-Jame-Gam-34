@@ -13,6 +13,7 @@ public class FieldHandler : MonoBehaviour
     public static FieldHandler Instance;
     
     private HashSet<Vector3Int> _fieldTiles = new HashSet<Vector3Int>();
+    private HashSet<Vector3Int> _reservedFieldTiles = new HashSet<Vector3Int>();
 
     private void Awake()
     {
@@ -23,6 +24,16 @@ public class FieldHandler : MonoBehaviour
         }
         
         Instance = this;
+    }
+    
+    public Vector3 CellToWorld(Vector3Int cellPosition)
+    {
+        return fieldMap.CellToWorld(cellPosition);
+    }
+    
+    public Vector3Int WorldToCell(Vector3 worldPosition)
+    {
+        return fieldMap.WorldToCell(worldPosition);
     }
     
     public void CreateFieldTile(Vector3 worldPosition)
@@ -70,6 +81,23 @@ public class FieldHandler : MonoBehaviour
     {
         Vector3Int gridPosition = fieldMap.WorldToCell(worldPosition);
         return _fieldTiles.Contains(gridPosition);
+    }
+    
+    public Vector3Int ReserveEmptyFieldTile()
+    {
+        Vector3Int randomPosition;
+        do
+        {
+            randomPosition = GameAreaHandler.Instance.GetRandomCellPositionInsideGameArea();
+        } while (_fieldTiles.Contains(randomPosition) || _reservedFieldTiles.Contains(randomPosition));
+        
+        _reservedFieldTiles.Add(randomPosition);
+        return randomPosition;
+    }
+    
+    public void UnreserveFieldTile(Vector3Int gridPosition)
+    {
+        _reservedFieldTiles.Remove(gridPosition);
     }
     
 }
