@@ -133,6 +133,7 @@ GameObject:
   - component: {fileID: 27928174}
   - component: {fileID: 27928175}
   - component: {fileID: 27928176}
+  - component: {fileID: 27928177}
   m_Layer: 0
   m_Name: Player Sprite
   m_TagString: Player
@@ -228,6 +229,19 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &27928177
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 27928173}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a41b62f9824499541ad72fc9226e7ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  offsetY: -0.75
 --- !u!1 &56066354
 GameObject:
   m_ObjectHideFlags: 0
@@ -377,6 +391,7 @@ GameObject:
   m_Component:
   - component: {fileID: 120226641}
   - component: {fileID: 120226640}
+  - component: {fileID: 120226642}
   m_Layer: 0
   m_Name: Enemy Sprite
   m_TagString: Untagged
@@ -451,6 +466,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1212692300}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &120226642
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 120226639}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a41b62f9824499541ad72fc9226e7ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  offsetY: -1
 --- !u!1 &125491511
 GameObject:
   m_ObjectHideFlags: 0
@@ -658,6 +686,7 @@ GameObject:
   m_Component:
   - component: {fileID: 987600829}
   - component: {fileID: 987600830}
+  - component: {fileID: 987600831}
   m_Layer: 6
   m_Name: Weapon Sprite
   m_TagString: Untagged
@@ -732,6 +761,19 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &987600831
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 987600828}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a41b62f9824499541ad72fc9226e7ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  offsetY: -0.4
 --- !u!1 &993006684
 GameObject:
   m_ObjectHideFlags: 0
@@ -9205,7 +9247,7 @@ Transform:
   m_GameObject: {fileID: 1795394707}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 10.6, y: 6.5, z: -0.09151986}
+  m_LocalPosition: {x: 0.26, y: 4.83, z: -0.09151986}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -9341,6 +9383,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1954297618}
   - component: {fileID: 1954297617}
+  - component: {fileID: 1954297619}
   m_Layer: 0
   m_Name: Enemy Sprite
   m_TagString: Untagged
@@ -9415,6 +9458,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1795394711}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1954297619
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1954297616}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a41b62f9824499541ad72fc9226e7ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  offsetY: -1
 --- !u!1 &2036547072
 GameObject:
   m_ObjectHideFlags: 0
@@ -9425,6 +9481,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2036547074}
   - component: {fileID: 2036547073}
+  - component: {fileID: 2036547075}
   m_Layer: 0
   m_Name: building_top_center
   m_TagString: Untagged
@@ -9499,6 +9556,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2036547075
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2036547072}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a41b62f9824499541ad72fc9226e7ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  offsetY: -3
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
