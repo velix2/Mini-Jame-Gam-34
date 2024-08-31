@@ -34,6 +34,7 @@ public class PlayerMovement : MonoBehaviour
     private static readonly int ItemId = Animator.StringToHash("itemId");
     private static readonly int IsWalking = Animator.StringToHash("isWalking");
     private float _baseAnimationSpeed;
+    private static readonly int IsAttacking = Animator.StringToHash("isAttacking");
 
     // Start is called before the first frame update
     void Awake()
@@ -165,11 +166,18 @@ public class PlayerMovement : MonoBehaviour
     private void AttackEnemies()
     {
         var enemies = enemyNearbyHandler.GetEnemiesNearby();
-        //TODO FIXME. Concurrent modification exception
+        animator.SetBool(IsAttacking, true);
+        StartCoroutine(DisableIsAttacking());
         foreach (var enemy in enemies)
         {
             enemy.Damage(1);
         }
+    }
+    
+    private IEnumerator DisableIsAttacking()
+    {
+        yield return new WaitForSeconds(interactionSettings.swordCooldown / 2f);
+        animator.SetBool(IsAttacking, false);
     }
     
     private void GoOnCooldown(float durationInSecs)
