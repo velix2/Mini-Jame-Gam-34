@@ -26,12 +26,12 @@ public class WaterEnemy : Enemy
         //Get new target position
         if (!_hasTargetPosition)
         {
-            //If no field tiles exist, wander
+            //If no field tiles exist, go to harvest
             if (!FieldHandler.Instance.DoUnwateredTilesExist())
             {
-                _phase = Phase.Wander;
+                _phase = Phase.Harvest;
                 _hasTargetPosition = false;
-                Debug.Log("Wandering");
+                Debug.Log("Harvesting");
                 return;
             }
             
@@ -53,12 +53,13 @@ public class WaterEnemy : Enemy
 
     protected override void Wander()
     {
-        throw new System.NotImplementedException();
+        
     }
 
     protected override void OnWorkCompleted()
     {
-        throw new System.NotImplementedException();
+        Debug.Log("Watering completed");
+        FieldHandler.Instance.WaterSeed(FieldHandler.Instance.WorldToCell(_workPosition));
     }
     
 }

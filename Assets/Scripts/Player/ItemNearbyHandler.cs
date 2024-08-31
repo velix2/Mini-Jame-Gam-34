@@ -6,6 +6,9 @@ using UnityEngine;
 public class ItemNearbyHandler : MonoBehaviour
 {
     private Item _currentItemNearby;
+    private Seed _currentSeedNearby;
+    
+    private bool _useSeedHighlighting = false;
     
     private void OnTriggerEnter2D(Collider2D other)
     {
@@ -15,6 +18,14 @@ public class ItemNearbyHandler : MonoBehaviour
             Debug.Log("Item nearby: " + item.ItemType);
             _currentItemNearby = item;
             _currentItemNearby.Highlight();
+        } else if (other.CompareTag("Seed"))
+        {
+            Seed seed = other.GetComponent<Seed>();
+            _currentSeedNearby = seed;
+            if (UseSeedHighlighting)
+            {
+                _currentSeedNearby.Highlight();
+            }
         }
     }
     
@@ -26,6 +37,14 @@ public class ItemNearbyHandler : MonoBehaviour
             _currentItemNearby.Unhighlight();
             _currentItemNearby = null;
         }
+        else if (other.CompareTag("Seed") && other == _currentSeedNearby.GetComponent<Collider2D>())
+        {
+            if (UseSeedHighlighting)
+            {
+                _currentSeedNearby.Unhighlight();
+            }
+            _currentSeedNearby = null;
+        }
     }
     
     public ItemType GetItemTypeNearby()
@@ -36,5 +55,28 @@ public class ItemNearbyHandler : MonoBehaviour
     public Item GetItemNearby()
     {
         return _currentItemNearby;
+    }
+
+    public Seed GetSeedNearby()
+    {
+        return _currentSeedNearby;
+    }
+
+    public bool UseSeedHighlighting
+    {
+        set
+        {
+            _useSeedHighlighting = value;
+            if (_currentSeedNearby == null) return;
+            if (value)
+            {
+                _currentSeedNearby.Highlight();
+            }
+            else
+            {
+                _currentSeedNearby.Unhighlight();
+            }
+        }
+        get => _useSeedHighlighting;
     }
 }

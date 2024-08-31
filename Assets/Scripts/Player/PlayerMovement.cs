@@ -78,11 +78,11 @@ public class PlayerMovement : MonoBehaviour
         {
             case ItemType.Weapon:
                 AttackEnemies();
-                DecreaseDurability();
                 GoOnCooldown(interactionSettings.swordCooldown);
+                DecreaseDurability();
                 break;
             case ItemType.Poison:
-                DecreaseDurability();
+                UsePoison();
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
@@ -123,12 +123,21 @@ public class PlayerMovement : MonoBehaviour
                 durabilityBar.SetValue(_currentItem.Durability);
                 durabilityBar.SetVisible(true);
 
+                if (_currentItemType == ItemType.Poison)
+                {
+                    itemNearbyHandler.UseSeedHighlighting = true;
+                }
+
                 Debug.Log("Picked up item: " + _currentItemType);
             }
         }
         else
         {
             Debug.Log("Dropped item: " + _currentItemType);
+            if (_currentItemType == ItemType.Poison)
+            {
+                itemNearbyHandler.UseSeedHighlighting = false;
+            }
             _currentItem.Drop();
             durabilityBar.SetVisible(false);
             _currentItemType = ItemType.None;
@@ -193,6 +202,15 @@ public class PlayerMovement : MonoBehaviour
     {
         yield return new WaitForSeconds(interactionSettings.swordCooldown / 2f);
         animator.SetBool(IsAttacking, false);
+    }
+    
+    private void UsePoison()
+    {
+        var seed = itemNearbyHandler.GetSeedNearby();
+        if (!seed) return;
+        seed.Poison();
+        GoOnCooldown(1.0f);
+        DecreaseDurability();
     }
 
     private void GoOnCooldown(float durationInSecs)

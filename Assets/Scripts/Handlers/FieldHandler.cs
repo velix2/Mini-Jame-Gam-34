@@ -10,6 +10,7 @@ public class FieldHandler : MonoBehaviour
 {
     [SerializeField] private Tilemap fieldMap;
     [SerializeField] private Tile fieldTilePrefab;
+    [SerializeField] private Tile fieldTileWateredPrefab;
     [SerializeField] private GameObject seedPrefab;
     
     
@@ -139,6 +140,7 @@ public class FieldHandler : MonoBehaviour
         }
         Destroy(seed.gameObject);
         _seeds.Remove(gridPosition);
+        fieldMap.SetTile(gridPosition, fieldTilePrefab);
     }
 
     public bool DoUnwateredTilesExist()
@@ -152,7 +154,7 @@ public class FieldHandler : MonoBehaviour
         
         if (unwateredSeedsList.Count == 0)
         {
-            return Vector3.zero;
+            return -Vector3.one;
         }
         int randomIndex = UnityEngine.Random.Range(0, unwateredSeedsList.Count);
         return unwateredSeedsList[randomIndex].transform.position;
@@ -162,5 +164,15 @@ public class FieldHandler : MonoBehaviour
     {
         Vector3Int gridPosition = fieldMap.WorldToCell(worldPosition);
         return _seeds.ContainsKey(gridPosition) && !_seeds[gridPosition].IsWatered;
+    }
+    
+    public void WaterSeed(Vector3Int gridPosition)
+    {
+        if (!_seeds.TryGetValue(gridPosition, out var seed))
+        {
+            return;
+        }
+        seed.Water();
+        fieldMap.SetTile(gridPosition, fieldTileWateredPrefab);
     }
 }

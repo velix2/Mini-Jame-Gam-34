@@ -168,7 +168,6 @@ public abstract class Enemy : MonoBehaviour
         if (!_hasTargetHarvestPosition)
         {
             Debug.Log("Harvesting");
-            //TODO: Check for ripe tomatoes and proceed to harvest
 
             var pos = FieldHandler.Instance.GetRandomRipeSeedPosition();
             if (pos == -Vector3.one)
