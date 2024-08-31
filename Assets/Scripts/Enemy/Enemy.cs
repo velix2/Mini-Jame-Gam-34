@@ -21,7 +21,9 @@ public abstract class Enemy : MonoBehaviour
     [SerializeField] private float knockBackStrength = 1f;
     [SerializeField] private Animator animator;
 
-
+    private static readonly int Moving = Animator.StringToHash("isMoving");
+    private static readonly int IsWorking = Animator.StringToHash("isWorking");
+    
     private int _health = 3;
     private Rigidbody2D _rb;
     protected Vector2 _moveDirection;
@@ -142,14 +144,17 @@ public abstract class Enemy : MonoBehaviour
         if (Vector2.Distance(transform.position, _workPosition) > 0.1f)
         {
             Debug.Log("Returning to work position");
+            animator.SetBool(IsWorking, false);
             _phase = Phase.MoveToField;
             return;
         }
+        animator.SetBool(IsWorking, true);
 
         Debug.Log("Working, completion: " + _workCompletion);
         ProgressWork();
         if (_workCompletion < 1f) return;
         OnWorkCompleted();
+        animator.SetBool(IsWorking, false);
         _phase = Phase.Harvest;
     }
 
@@ -163,7 +168,6 @@ public abstract class Enemy : MonoBehaviour
     private bool _hasTargetHarvestPosition = false;
     private Vector3Int _targetHarvestCellPosition;
     private Vector3 _targetHarvestWorldPosition;
-    private static readonly int Moving = Animator.StringToHash("isMoving");
 
     private void Harvest()
     {

@@ -58,7 +58,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Working
-  m_Speed: 0.5
+  m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: -1817523665667931986}
@@ -71,7 +71,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 4384743cd930739459cec9d02819efbe, type: 2}
+  m_Motion: {fileID: 7400000, guid: b266dd88e85be294aa594634b99a6ac5, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -123,7 +123,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: b736a1a52fdfd5b4890c194e04708c96, type: 2}
+  m_Motion: {fileID: 7400000, guid: fcc56ca17979acb40992af1bca1fc6a0, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -135,7 +135,7 @@ AnimatorController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: SowFarmer
+  m_Name: PlowFarmer
   serializedVersion: 5
   m_AnimatorParameters:
   - m_Name: isMoving
@@ -210,7 +210,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 5f007e88ee9fc324aba8d0fdf96664c4, type: 2}
+  m_Motion: {fileID: 7400000, guid: 6fb9b09fe6752ad44b0261677ffd00bc, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
