@@ -32,6 +32,7 @@ public abstract class Item : MonoBehaviour
         _collider.enabled = false;
         
         transform.SetParent(itemHolder.transform);
+        transform.localPosition = Vector3.right * 0.5f;
     }
     
     public void Drop()

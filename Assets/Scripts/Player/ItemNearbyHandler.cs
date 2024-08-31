@@ -16,6 +16,10 @@ public class ItemNearbyHandler : MonoBehaviour
         {
             Item item = other.GetComponent<Item>();
             Debug.Log("Item nearby: " + item.ItemType);
+            if (_currentItemNearby != null)
+            {
+                _currentItemNearby.Unhighlight();
+            }
             _currentItemNearby = item;
             _currentItemNearby.Highlight();
         } else if (other.CompareTag("Seed"))
@@ -31,13 +35,13 @@ public class ItemNearbyHandler : MonoBehaviour
     
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (other.CompareTag("Item") && other == _currentItemNearby.GetComponent<Collider2D>())
+        if (other.CompareTag("Item") && _currentItemNearby && other == _currentItemNearby.GetComponent<Collider2D>())
         {
             Debug.Log("Item not nearby");
             _currentItemNearby.Unhighlight();
             _currentItemNearby = null;
         }
-        else if (other.CompareTag("Seed") && other == _currentSeedNearby.GetComponent<Collider2D>())
+        else if (other.CompareTag("Seed") && _currentSeedNearby && other == _currentSeedNearby.GetComponent<Collider2D>())
         {
             if (UseSeedHighlighting)
             {
