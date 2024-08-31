@@ -13,11 +13,13 @@ public abstract class Enemy : MonoBehaviour
         Harvest,
         ReturnToBase,
     }
+
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private int maxHealth = 3;
     [SerializeField] private Renderer spriteRenderer;
     [SerializeField] private float workSpeed = 1f;
-    
+    [SerializeField] private float knockBackStrength = 1f;
+
 
     private int _health = 3;
     private Rigidbody2D _rb;
@@ -107,16 +109,16 @@ public abstract class Enemy : MonoBehaviour
             Debug.Log("Moving to field");
         }
     }
-    
+
     protected void SetMoveDirectionTowards(Vector2 target)
     {
-        _moveDirection = (target - (Vector2) transform.position).normalized;
+        _moveDirection = (target - (Vector2)transform.position).normalized;
     }
-    
+
     protected abstract void MoveToField();
-    
+
     protected abstract void Wander();
-    
+
     private void Work()
     {
         if (Vector2.Distance(transform.position, _workPosition) > 0.1f)
@@ -125,6 +127,7 @@ public abstract class Enemy : MonoBehaviour
             _phase = Phase.MoveToField;
             return;
         }
+
         Debug.Log("Working, completion: " + _workCompletion);
         ProgressWork();
         if (_workCompletion < 1f) return;
@@ -138,16 +141,59 @@ public abstract class Enemy : MonoBehaviour
     {
         _workCompletion += Time.deltaTime * workSpeed;
     }
+
+    private bool _hasTargetHarvestPosition = false;
+    private Vector3Int _targetHarvestCellPosition;
+    private Vector3 _targetHarvestWorldPosition;
     
     private void Harvest()
     {
-        Debug.Log("Harvesting");
-        //TODO: Check for ripe tomatoes and proceed to harvest
-        //For now, just return to base
-        _phase = Phase.ReturnToBase;
+        if (!_hasTargetHarvestPosition)
+        {
+            Debug.Log("Harvesting");
+            //TODO: Check for ripe tomatoes and proceed to harvest
+
+            var pos = FieldHandler.Instance.GetRandomRipeSeedPosition();
+            if (pos == -Vector3.one)
+            {
+                pos = FieldHandler.Instance.GetRandomDeadSeedPosition();
+                if (pos == -Vector3.one)
+                {
+                    Debug.Log("No seeds to harvest");
+                    _phase = Phase.ReturnToBase;
+                    return;
+                }
+            }
+            _targetHarvestWorldPosition = pos;
+            _targetHarvestCellPosition = FieldHandler.Instance.WorldToCell(_targetHarvestWorldPosition);
+            _hasTargetHarvestPosition = true;
+        }
+
+        if (!FieldHandler.Instance.IsSeedAtCellRipeOrDead(_targetHarvestCellPosition))
+        {
+            //Seed was removed, get new one
+            _hasTargetHarvestPosition = false;
+            return;
+        }
+        _isMoving = true;
+        SetMoveDirectionTowards(_targetHarvestWorldPosition);
+        
+        if (Vector2.Distance(transform.position, _targetHarvestWorldPosition) < 0.1f)
+        {
+            FieldHandler.Instance.RemoveSeed(_targetHarvestCellPosition);
+            
+            //Now 50-50 chance to return to base or continue harvesting
+            if (UnityEngine.Random.value > 0.5f)
+            {
+                _hasTargetHarvestPosition = false;
+                return;
+            }
+            _phase = Phase.ReturnToBase;
+        }
+
     }
-    
-    
+
+
     private void ReturnToBase()
     {
         _isMoving = true;
@@ -159,7 +205,7 @@ public abstract class Enemy : MonoBehaviour
             Destroy(gameObject);
         }
     }
-    
+
     private void FixedUpdate()
     {
         Move();
@@ -174,5 +220,32 @@ public abstract class Enemy : MonoBehaviour
         }
 
         _rb.velocity = _moveDirection * (moveSpeed * Time.fixedDeltaTime * 16f);
+        //Flip sprite based on movement direction
+        if (_moveDirection.x > 0)
+        {
+            transform.localScale = new Vector3(1, 1, 1);
+        }
+        else if (_moveDirection.x < 0)
+        {
+            transform.localScale = new Vector3(-1, 1, 1);
+        }
     }
+
+    private void OnCollisionEnter2D(Collision2D other)
+    {
+        Debug.Log("Collision");
+        var otherRb = other.rigidbody;
+        Vector2 directionOtherToThis = (transform.position - other.transform.position).normalized;
+        var thisAmount = Mathf.Abs(Vector2.Dot(_rb.velocity, directionOtherToThis));
+        var otherAmount = Mathf.Abs(Vector2.Dot(otherRb.velocity, directionOtherToThis));
+
+
+        //If the other object is moving faster, "knock back" this object
+
+        transform.position += (Vector3)directionOtherToThis * otherAmount * 0.1f * knockBackStrength;
+
+        //"Knock back" the other object
+        other.transform.position += (Vector3)directionOtherToThis * -thisAmount * 0.1f * knockBackStrength;
+    }
+
 }

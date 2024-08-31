@@ -9,6 +9,7 @@ public class RenderSorting : MonoBehaviour
 {
     private SpriteRenderer _spriteRenderer;
     [SerializeField] private float offsetY;
+    [SerializeField] private int offsetLayer;
 
     private void Awake()
     {
@@ -20,6 +21,6 @@ public class RenderSorting : MonoBehaviour
         var y = transform.position.y + offsetY;
         var intY = (int) (y * 100f);
         
-        _spriteRenderer.sortingOrder = -intY;
+        _spriteRenderer.sortingOrder = -intY + offsetLayer;
     }
 }

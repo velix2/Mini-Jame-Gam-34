@@ -10,9 +10,7 @@ public class PlowEnemy : Enemy
     {
         if (!_hasFieldReserved)
         {
-            _fieldCellPosition = FieldHandler.Instance.ReserveEmptyFieldTile();
-            _fieldWorldPosition = FieldHandler.Instance.CellToWorld(_fieldCellPosition);
-            _hasFieldReserved = true;
+            ReserveField();
         }
         
         if (Vector2.Distance(transform.position, _fieldWorldPosition) < 0.1f)
@@ -25,6 +23,13 @@ public class PlowEnemy : Enemy
         
         _isMoving = true;
         SetMoveDirectionTowards(_fieldWorldPosition);
+    }
+
+    private void ReserveField()
+    {
+        _fieldCellPosition = FieldHandler.Instance.ReserveEmptyFieldTile();
+        _fieldWorldPosition = FieldHandler.Instance.CellToWorldCentered(_fieldCellPosition);
+        _hasFieldReserved = true;
     }
 
     protected override void Wander()

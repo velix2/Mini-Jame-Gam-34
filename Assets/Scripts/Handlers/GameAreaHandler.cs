@@ -24,8 +24,8 @@ public class GameAreaHandler : MonoBehaviour
 
     private void Start()
     {
-        _topLeftCornerWorldPosition = FieldHandler.Instance.CellToWorld(topLeftCorner);
-        _bottomRightCornerWorldPosition = FieldHandler.Instance.CellToWorld(bottomRightCorner);
+        _topLeftCornerWorldPosition = FieldHandler.Instance.CellToWorldCentered(topLeftCorner);
+        _bottomRightCornerWorldPosition = FieldHandler.Instance.CellToWorldCentered(bottomRightCorner);
     }
     
     public bool IsPositionInsideGameArea(Vector3 position)

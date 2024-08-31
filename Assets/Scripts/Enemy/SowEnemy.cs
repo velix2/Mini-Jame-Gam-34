@@ -34,6 +34,7 @@ public class SowEnemy : Enemy
             if (!FieldHandler.Instance.DoFieldTilesExist())
             {
                 _phase = Phase.Wander;
+                _hasTargetPosition = false;
                 Debug.Log("Wandering");
                 return;
             }
@@ -43,8 +44,9 @@ public class SowEnemy : Enemy
         }
         
         //Does Target still exist?
-        else if (FieldHandler.Instance.DoesFieldWithWorldCoordsExist(_targetPosition))
+        else if (!FieldHandler.Instance.DoesEmptyPlowedFieldWithWorldCoordsExist(_targetPosition))
         {
+            Debug.Log("Target does not exist");
             _hasTargetPosition = false;
             return;
         }
@@ -58,16 +60,29 @@ public class SowEnemy : Enemy
     protected override void Wander()
     {
         _isMoving = true;
-        _moveDirection = ((Vector2)GameAreaHandler.Instance.GetRandomWorldPositionInsideGameArea() - (Vector2) transform.position).normalized;
+        
+        if (Vector3.Distance(_targetPosition, transform.position) < 0.1f)
+        {
+            _hasTargetPosition = false;
+        }
+        
+        if (!_hasTargetPosition)
+        {
+            _targetPosition = GameAreaHandler.Instance.GetRandomWorldPositionInsideGameArea();
+            _hasTargetPosition = true;
+        }
+        _moveDirection = ((Vector2)_targetPosition - (Vector2) transform.position).normalized;
 
         if (!FieldHandler.Instance.DoFieldTilesExist()) return;
         _phase = Phase.MoveToField;
+        _hasTargetPosition = false;
         Debug.Log("Moving to field");
     }
 
     protected override void OnWorkCompleted()
     {
-        
+        FieldHandler.Instance.PlantSeed(FieldHandler.Instance.WorldToCell(_workPosition));
     }
+    
     
 }

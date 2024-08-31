@@ -48,7 +48,7 @@ public class PlayerMovement : MonoBehaviour
     {
         PickUpDrop();
         Interact();
-        DebugMethod();
+        //DebugMethod();
     }
 
     private void DebugMethod()
