@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8739483014807964025}
   - component: {fileID: 1713046901512237947}
   - component: {fileID: 1028297473077466154}
+  - component: {fileID: 8331367768176144847}
   m_Layer: 7
   m_Name: Enemy Sprite
   m_TagString: Untagged
@@ -100,6 +101,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   offsetY: -1
   offsetLayer: 0
+--- !u!95 &8331367768176144847
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 347664944327333083}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 2c2a263921dd96f43a702186c8fe1d92, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &4536231686373106081
 GameObject:
   m_ObjectHideFlags: 0
@@ -251,6 +273,7 @@ MonoBehaviour:
   spriteRenderer: {fileID: 1713046901512237947}
   workSpeed: 1
   knockBackStrength: 1
+  animator: {fileID: 8331367768176144847}
 --- !u!50 &2797017921009974118
 Rigidbody2D:
   serializedVersion: 4

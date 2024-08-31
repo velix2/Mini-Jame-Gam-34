@@ -15,13 +15,13 @@ public class PlowEnemy : Enemy
         
         if (Vector2.Distance(transform.position, _fieldWorldPosition) < 0.1f)
         {
-            _isMoving = false;
+            IsMoving = false;
             _phase = Phase.Work;
             _workPosition = _fieldWorldPosition;
             return;
         }
         
-        _isMoving = true;
+        IsMoving = true;
         SetMoveDirectionTowards(_fieldWorldPosition);
     }
 

@@ -62,7 +62,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Interact()
     {
-        if (!Input.GetKeyDown(KeyCode.F)) return;
+        if (!Input.GetKeyDown(KeyCode.Space)) return;
         if (_currentItemType == ItemType.None) return;
         UseItem();
     }
@@ -83,8 +83,6 @@ public class PlayerMovement : MonoBehaviour
                 break;
             case ItemType.Poison:
                 DecreaseDurability();
-                break;
-            case ItemType.None:
                 break;
             default:
                 throw new ArgumentOutOfRangeException();

@@ -52,6 +52,7 @@ MonoBehaviour:
   spriteRenderer: {fileID: 4230197083466080640}
   workSpeed: 1
   knockBackStrength: 1
+  animator: {fileID: 2728652284573953588}
 --- !u!50 &3184130226159995183
 Rigidbody2D:
   serializedVersion: 4
@@ -125,6 +126,7 @@ GameObject:
   - component: {fileID: 30457003834539703}
   - component: {fileID: 4230197083466080640}
   - component: {fileID: 6398934658575980483}
+  - component: {fileID: 2728652284573953588}
   m_Layer: 7
   m_Name: Enemy Sprite
   m_TagString: Untagged
@@ -214,6 +216,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   offsetY: -1
   offsetLayer: 0
+--- !u!95 &2728652284573953588
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3780798676804185932}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 2c2a263921dd96f43a702186c8fe1d92, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &6818027868100347338
 GameObject:
   m_ObjectHideFlags: 0

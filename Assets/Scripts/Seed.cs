@@ -25,6 +25,7 @@ public class Seed : MonoBehaviour
 
     [SerializeField] private SeedSprites sprites;
     [SerializeField] private SpriteRenderer spriteRenderer;
+    [SerializeField] private float wateredGrowthDurationMultiplier = 0.5f;
     
     [SerializeField] private float growthTime0To1 = 10f;
     [SerializeField] private float growthTime1ToRipe = 10f;
@@ -36,6 +37,13 @@ public class Seed : MonoBehaviour
     private float _growthTime0;
     private float _growthTime1;
     private float _growthTime2;
+
+    private bool _isWatered = false;
+
+    public bool IsWatered
+    {
+        get => _isWatered;
+    }
 
     private void Awake()
     {
@@ -67,6 +75,13 @@ public class Seed : MonoBehaviour
             spriteRenderer.sprite = sprites.dead;
             _growthTimer = 0f;
         }
+    }
+    
+    public void Water()
+    {
+        if (_isWatered) return;
+        _isWatered = true;
+        _growthTime0 *= wateredGrowthDurationMultiplier;
     }
 
     public GrowthStages GrowthStage => _growthStage;

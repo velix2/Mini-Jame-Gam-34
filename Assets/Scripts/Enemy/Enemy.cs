@@ -19,12 +19,23 @@ public abstract class Enemy : MonoBehaviour
     [SerializeField] private Renderer spriteRenderer;
     [SerializeField] private float workSpeed = 1f;
     [SerializeField] private float knockBackStrength = 1f;
+    [SerializeField] private Animator animator;
 
 
     private int _health = 3;
     private Rigidbody2D _rb;
     protected Vector2 _moveDirection;
-    protected bool _isMoving;
+
+    private bool _isMoving = false;
+    protected bool IsMoving
+    {
+        get => _isMoving;
+        set
+        {
+            _isMoving = value;
+            animator.SetBool(Moving, value);
+        }
+    }
     protected Phase _phase = Phase.ApproachArea;
     protected Vector2 _workPosition;
     private float _workCompletion = 0f;
@@ -33,6 +44,11 @@ public abstract class Enemy : MonoBehaviour
     {
         _rb = GetComponent<Rigidbody2D>();
         _health = maxHealth;
+    }
+
+    private void Start()
+    {
+        animator.SetBool(Moving, true);
     }
 
     public void Damage(int damage)
@@ -100,7 +116,7 @@ public abstract class Enemy : MonoBehaviour
     //TODO: Actually consider the area
     private void ApproachArea()
     {
-        _isMoving = true;
+        IsMoving = true;
         _moveDirection = (Vector2.zero - (Vector2)transform.position).normalized;
 
         if (Vector2.Distance(transform.position, Vector2.zero) < 5.0f)
@@ -145,7 +161,8 @@ public abstract class Enemy : MonoBehaviour
     private bool _hasTargetHarvestPosition = false;
     private Vector3Int _targetHarvestCellPosition;
     private Vector3 _targetHarvestWorldPosition;
-    
+    private static readonly int Moving = Animator.StringToHash("isMoving");
+
     private void Harvest()
     {
         if (!_hasTargetHarvestPosition)
@@ -175,7 +192,7 @@ public abstract class Enemy : MonoBehaviour
             _hasTargetHarvestPosition = false;
             return;
         }
-        _isMoving = true;
+        IsMoving = true;
         SetMoveDirectionTowards(_targetHarvestWorldPosition);
         
         if (Vector2.Distance(transform.position, _targetHarvestWorldPosition) < 0.1f)
@@ -196,7 +213,7 @@ public abstract class Enemy : MonoBehaviour
 
     private void ReturnToBase()
     {
-        _isMoving = true;
+        IsMoving = true;
         SetMoveDirectionTowards(Vector2.left * 15f);
 
         if (Vector2.Distance(transform.position, Vector2.left * 15f) < 0.1f)
@@ -213,7 +230,7 @@ public abstract class Enemy : MonoBehaviour
 
     private void Move()
     {
-        if (!_isMoving)
+        if (!IsMoving)
         {
             _rb.velocity = Vector2.zero;
             return;

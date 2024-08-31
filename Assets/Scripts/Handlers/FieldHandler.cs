@@ -48,24 +48,6 @@ public class FieldHandler : MonoBehaviour
         _fieldTiles.Add(gridPosition);
     }
     
-    public void RemoveFieldTile(Vector3 worldPosition)
-    {
-        Vector3Int gridPosition = fieldMap.WorldToCell(worldPosition);
-        fieldMap.SetTile(gridPosition, null);
-        _fieldTiles.Remove(gridPosition);
-    }
-    
-    public GameObject GetFieldTileAtWorldPosition(Vector3 worldPosition)
-    {
-        Vector3Int gridPosition = fieldMap.WorldToCell(worldPosition);
-        return fieldMap.GetInstantiatedObject(gridPosition);
-    }
-    
-    public GameObject GetFieldTileAtGridPosition(Vector3Int gridPosition)
-    {
-        return fieldMap.GetInstantiatedObject(gridPosition);
-    }
-    
     public Vector3 GetWorldPositionOfRandomFieldTile()
     {
         if (_fieldTiles.Count == 0)
@@ -157,5 +139,28 @@ public class FieldHandler : MonoBehaviour
         }
         Destroy(seed.gameObject);
         _seeds.Remove(gridPosition);
+    }
+
+    public bool DoUnwateredTilesExist()
+    {
+        return _seeds.Any(pair => !pair.Value.IsWatered);
+    }
+    
+    public Vector3 GetWorldPositionOfRandomUnwateredTile()
+    {
+        var unwateredSeedsList = _seeds.Where(pair => !pair.Value.IsWatered).Select(pair => pair.Value).ToList();
+        
+        if (unwateredSeedsList.Count == 0)
+        {
+            return Vector3.zero;
+        }
+        int randomIndex = UnityEngine.Random.Range(0, unwateredSeedsList.Count);
+        return unwateredSeedsList[randomIndex].transform.position;
+    }
+    
+    public bool DoesUnwateredFieldWithWorldCoordsExist(Vector3 worldPosition)
+    {
+        Vector3Int gridPosition = fieldMap.WorldToCell(worldPosition);
+        return _seeds.ContainsKey(gridPosition) && !_seeds[gridPosition].IsWatered;
     }
 }
