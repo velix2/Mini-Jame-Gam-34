@@ -12,19 +12,20 @@ public class PlayerMovement : MonoBehaviour
         public float moveSpeed = 12f;
         public float sprintMultiplier = 1.5f;
     }
-    
+
     [System.Serializable]
     public class InteractionSettings
     {
         public float swordCooldown = 0.5f;
     }
-    
+
     [SerializeField] private MoveSettings moveSettings;
     [SerializeField] private InteractionSettings interactionSettings;
     [SerializeField] private ItemNearbyHandler itemNearbyHandler;
     [SerializeField] private EnemyNearbyHandler enemyNearbyHandler;
     [SerializeField] private Animator animator;
-    
+    [SerializeField] private ProgressBarInWorld durabilityBar;
+
     private Rigidbody2D _rb;
     private Vector2 _moveInput;
 
@@ -72,13 +73,16 @@ public class PlayerMovement : MonoBehaviour
         {
             return;
         }
+
         switch (_currentItemType)
         {
             case ItemType.Weapon:
                 AttackEnemies();
+                DecreaseDurability();
                 GoOnCooldown(interactionSettings.swordCooldown);
                 break;
             case ItemType.Poison:
+                DecreaseDurability();
                 break;
             case ItemType.None:
                 break;
@@ -87,13 +91,26 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    private void DecreaseDurability()
+    {
+        _currentItem.Durability--;
+        durabilityBar.SetValue(_currentItem.Durability);
+        if (_currentItem.Durability > 0) return;
+        durabilityBar.SetVisible(false);
+        //TODO: Animation switches too early
+        animator.SetInteger(ItemId, 0);
+        Destroy(_currentItem.gameObject);
+        _currentItemType = ItemType.None;
+        _currentItem = null;
+    }
+
     private void PickUpDrop()
     {
         if (_isOnCooldown)
         {
             return;
         }
-        
+
         if (!Input.GetKeyDown(KeyCode.E)) return;
         if (_currentItemType == ItemType.None)
         {
@@ -104,42 +121,42 @@ public class PlayerMovement : MonoBehaviour
                 _currentItemType = itemType;
                 _currentItem = itemNearbyHandler.GetItemNearby();
                 _currentItem.PickUp(gameObject);
-                
-                    
+                durabilityBar.SetMaxValue(_currentItem.MaxDurability);
+                durabilityBar.SetValue(_currentItem.Durability);
+                durabilityBar.SetVisible(true);
+
                 Debug.Log("Picked up item: " + _currentItemType);
-            }
-            else
-            {
-                Debug.Log("No item nearby");
             }
         }
         else
         {
             Debug.Log("Dropped item: " + _currentItemType);
             _currentItem.Drop();
+            durabilityBar.SetVisible(false);
             _currentItemType = ItemType.None;
             _currentItem = null;
         }
-        
+
         //Animator
         animator.SetInteger(ItemId, (int)_currentItemType);
     }
-    
+
     private void FixedUpdate()
     {
         Move();
     }
-    
+
     private void Move()
     {
         //Basic movement
         _moveInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
         _moveInput = Vector2.ClampMagnitude(_moveInput, 1);
         animator.speed = _baseAnimationSpeed;
-        
+
         if (Input.GetKey(KeyCode.LeftShift))
         {
-            _rb.velocity = _moveInput * (moveSettings.moveSpeed * moveSettings.sprintMultiplier * Time.fixedDeltaTime * 16f);
+            _rb.velocity = _moveInput *
+                           (moveSettings.moveSpeed * moveSettings.sprintMultiplier * Time.fixedDeltaTime * 16f);
             animator.speed *= moveSettings.sprintMultiplier;
             //_rb.AddForce(_moveInput * (moveSettings.moveSpeed * moveSettings.sprintMultiplier * Time.fixedDeltaTime * 16f));
         }
@@ -148,7 +165,7 @@ public class PlayerMovement : MonoBehaviour
             _rb.velocity = _moveInput * (moveSettings.moveSpeed * Time.fixedDeltaTime * 16f);
             //_rb.AddForce(_moveInput * (moveSettings.moveSpeed * Time.fixedDeltaTime * 16f));
         }
-        
+
         //Flip sprite based on movement direction
         if (_moveInput.x > 0)
         {
@@ -158,7 +175,7 @@ public class PlayerMovement : MonoBehaviour
         {
             transform.localScale = new Vector3(-1, 1, 1);
         }
-        
+
         //Animator
         animator.SetBool(IsWalking, _moveInput.magnitude > 0.1f);
     }
@@ -173,19 +190,19 @@ public class PlayerMovement : MonoBehaviour
             enemy.Damage(1);
         }
     }
-    
+
     private IEnumerator DisableIsAttacking()
     {
         yield return new WaitForSeconds(interactionSettings.swordCooldown / 2f);
         animator.SetBool(IsAttacking, false);
     }
-    
+
     private void GoOnCooldown(float durationInSecs)
     {
         _isOnCooldown = true;
         StartCoroutine(EndCooldown(durationInSecs));
     }
-    
+
     private IEnumerator EndCooldown(float durationInSecs)
     {
         yield return new WaitForSeconds(durationInSecs);

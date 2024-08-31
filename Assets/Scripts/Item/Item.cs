@@ -6,6 +6,7 @@ public abstract class Item : MonoBehaviour
 {
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private Sprite spriteHighlighted;
+    [SerializeField] private int maxDurability = 8;
     private Collider2D _collider;
     private Sprite _spriteDefault;
 
@@ -14,19 +15,17 @@ public abstract class Item : MonoBehaviour
         Debug.Log("Item awake");
         _collider = GetComponent<Collider2D>();
         _spriteDefault = spriteRenderer.sprite;
+        Durability = maxDurability;
     }
 
     protected ItemType itemType;
-    private int durablity;
-
+    
     public ItemType ItemType => itemType;
 
-    public int Durablity
-    {
-        get => durablity;
-        set => durablity = value;
-    }
-    
+    public int Durability { get; set; }
+
+    public int MaxDurability => maxDurability;
+
     public void PickUp(GameObject itemHolder)
     {
         spriteRenderer.enabled = false;
