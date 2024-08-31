@@ -175,4 +175,20 @@ public class FieldHandler : MonoBehaviour
         seed.Water();
         fieldMap.SetTile(gridPosition, fieldTileWateredPrefab);
     }
+
+    public void TrampleFieldAtWorldPos(Vector3 position)
+    {
+        Vector3Int gridPosition = fieldMap.WorldToCell(position);
+        if (!_fieldTiles.Contains(gridPosition) || _seeds.ContainsKey(gridPosition))
+        {
+            Debug.Log("Can only trample unsowed field");
+            return;
+        }
+        
+        fieldMap.SetTile(gridPosition, null);
+        _fieldTiles.Remove(gridPosition);
+        _reservedFieldTiles.Remove(gridPosition);
+        ScoreHandler.Instance.Score += ScoreHandler.Instance.scoreValues.trample;
+
+    }
 }

@@ -98,6 +98,8 @@ public class Seed : MonoBehaviour
         _isPoisoned = true;
         //Necessary to prevent the seed from being poisoned again
         _collider2D.enabled = false;
+        
+        ScoreHandler.Instance.Score += ScoreHandler.Instance.scoreValues.poison;
         if (_growthStage != GrowthStages.Ripe) return;
         _growthStage = GrowthStages.Dead;
         spriteRenderer.sprite = sprites.dead;

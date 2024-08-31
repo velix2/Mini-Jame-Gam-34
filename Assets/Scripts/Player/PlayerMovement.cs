@@ -17,6 +17,8 @@ public class PlayerMovement : MonoBehaviour
     public class InteractionSettings
     {
         public float swordCooldown = 0.5f;
+        public float trampleDurationInSecs = 1.0f;
+
     }
 
     [SerializeField] private MoveSettings moveSettings;
@@ -32,25 +34,27 @@ public class PlayerMovement : MonoBehaviour
     private ItemType _currentItemType = ItemType.None;
     private Item _currentItem;
     private bool _isOnCooldown = false;
+    private bool _isTrampling = false;
+    
     private static readonly int ItemId = Animator.StringToHash("itemId");
     private static readonly int IsWalking = Animator.StringToHash("isWalking");
     private float _baseAnimationSpeed;
     private static readonly int IsAttacking = Animator.StringToHash("isAttacking");
 
-    // Start is called before the first frame update
     void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
         _baseAnimationSpeed = animator.speed;
     }
 
-    // Update is called once per frame
     void Update()
     {
         PickUpDrop();
         Interact();
+        Trample();
         //DebugMethod();
     }
+    
 
     private void DebugMethod()
     {
@@ -156,6 +160,12 @@ public class PlayerMovement : MonoBehaviour
     private void Move()
     {
         //Basic movement
+        if (_isTrampling)
+        {
+            _rb.velocity = Vector2.zero;
+            animator.SetBool(IsWalking, false);
+            return;
+        }
         _moveInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
         _moveInput = Vector2.ClampMagnitude(_moveInput, 1);
         animator.speed = _baseAnimationSpeed;
@@ -223,5 +233,37 @@ public class PlayerMovement : MonoBehaviour
     {
         yield return new WaitForSeconds(durationInSecs);
         _isOnCooldown = false;
+    }
+    
+    private Coroutine _trampleCoroutine;
+    private static readonly int IsTrampling = Animator.StringToHash("isTrampling");
+
+    private void Trample()
+    {
+        if (_rb.velocity.magnitude < 0.1f && _currentItemType == ItemType.None && !_isTrampling && Input.GetKeyDown(KeyCode.LeftControl))
+        {
+            _isTrampling = true;
+            animator.SetBool(IsTrampling, true);
+            _trampleCoroutine = StartCoroutine(AwaitTrampleEnd());
+        }
+        else if (_isTrampling && Input.GetKeyUp(KeyCode.LeftControl))
+        {
+            _isTrampling = false;
+            StopCoroutine(_trampleCoroutine);
+        }
+    }
+
+    private IEnumerator AwaitTrampleEnd()
+    {
+        yield return new WaitForSeconds(interactionSettings.trampleDurationInSecs);
+        _isTrampling = false;
+        OnTrampleComplete();
+    }
+
+    private void OnTrampleComplete()
+    {
+        var footPosition = transform.position + new Vector3(0, -1f, 0);
+        FieldHandler.Instance.TrampleFieldAtWorldPos(footPosition);
+        animator.SetBool(IsTrampling, false);
     }
 }

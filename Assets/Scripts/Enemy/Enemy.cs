@@ -54,6 +54,7 @@ public abstract class Enemy : MonoBehaviour
     public void Damage(int damage)
     {
         _health -= damage;
+        ScoreHandler.Instance.Score += ScoreHandler.Instance.scoreValues.damage;
         IndicateDamage();
     }
 
@@ -74,6 +75,7 @@ public abstract class Enemy : MonoBehaviour
     private void Kill()
     {
         if (_health > 0) return;
+        ScoreHandler.Instance.Score += ScoreHandler.Instance.scoreValues.kill;
         Dispose();
         Destroy(gameObject);
     }
