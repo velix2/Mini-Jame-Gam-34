@@ -35,6 +35,9 @@ public class GameHandler : MonoBehaviour
     [SerializeField] private WaveText waveText;
     [SerializeField] private TomatoText tomatoText;
     [SerializeField] private GameObject tutorialHolder;
+
+    [SerializeField] private GameObject normalCanvas;
+    [SerializeField] private GameObject gameOverCanvas;
     
     
     [System.Serializable]
@@ -93,7 +96,10 @@ public class GameHandler : MonoBehaviour
         IsGameOver = true;
         Time.timeScale = 0f;
         Debug.Log("Game over");
+        normalCanvas.SetActive(false);
+        gameOverCanvas.SetActive(true);
     }
+        
     
     public int TomatoesCollected { get; private set; }
 
