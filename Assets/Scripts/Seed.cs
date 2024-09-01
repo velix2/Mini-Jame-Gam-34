@@ -26,6 +26,7 @@ public class Seed : MonoBehaviour
     [SerializeField] private SeedSprites sprites;
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private SpriteRenderer highlighter;
+    [SerializeField] private GameObject particles;
     
     [SerializeField] private float wateredGrowthDurationMultiplier = 0.5f;
     
@@ -100,6 +101,7 @@ public class Seed : MonoBehaviour
         _isPoisoned = true;
         //Necessary to prevent the seed from being poisoned again
         _collider2D.enabled = false;
+        particles.SetActive(true);
         
         ScoreHandler.Instance.Score += ScoreHandler.Instance.scoreValues.poison;
         if (_growthStage != GrowthStages.Ripe) return;
