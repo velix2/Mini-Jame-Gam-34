@@ -18,7 +18,7 @@ public class WaterEnemy : Enemy
         {
             IsMoving = false;
             _phase = Phase.Work;
-            _workPosition = _targetPosition;
+            WorkPosition = _targetPosition;
             Debug.Log("Working");
             return;
         }
@@ -59,7 +59,7 @@ public class WaterEnemy : Enemy
     protected override void OnWorkCompleted()
     {
         Debug.Log("Watering completed");
-        FieldHandler.Instance.WaterSeed(FieldHandler.Instance.WorldToCell(_workPosition));
+        FieldHandler.Instance.WaterSeed(FieldHandler.Instance.WorldToCell(WorkPosition));
     }
     
 }

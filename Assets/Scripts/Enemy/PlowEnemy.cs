@@ -17,7 +17,7 @@ public class PlowEnemy : Enemy
         {
             IsMoving = false;
             _phase = Phase.Work;
-            _workPosition = _fieldWorldPosition;
+            WorkPosition = _fieldWorldPosition;
             return;
         }
         

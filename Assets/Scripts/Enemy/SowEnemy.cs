@@ -21,7 +21,7 @@ public class SowEnemy : Enemy
         {
             IsMoving = false;
             _phase = Phase.Work;
-            _workPosition = _targetPosition;
+            WorkPosition = _targetPosition;
             Debug.Log("Working");
             return;
         }
@@ -70,7 +70,7 @@ public class SowEnemy : Enemy
             _targetPosition = GameAreaHandler.Instance.GetRandomWorldPositionInsideGameArea();
             _hasTargetPosition = true;
         }
-        _moveDirection = ((Vector2)_targetPosition - (Vector2) transform.position).normalized;
+        MoveDirection = ((Vector2)_targetPosition - (Vector2) transform.position).normalized;
 
         if (!FieldHandler.Instance.DoFieldTilesExist()) return;
         _phase = Phase.MoveToField;
@@ -80,7 +80,7 @@ public class SowEnemy : Enemy
 
     protected override void OnWorkCompleted()
     {
-        FieldHandler.Instance.PlantSeed(FieldHandler.Instance.WorldToCell(_workPosition));
+        FieldHandler.Instance.PlantSeed(FieldHandler.Instance.WorldToCell(WorkPosition));
     }
     
     

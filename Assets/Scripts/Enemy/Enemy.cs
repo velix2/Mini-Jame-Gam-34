@@ -26,9 +26,10 @@ public abstract class Enemy : MonoBehaviour
     
     private int _health = 3;
     private Rigidbody2D _rb;
-    protected Vector2 _moveDirection;
+    private EnemyVisibilityNotifier _evn;
+    protected Vector2 MoveDirection;
 
-    private bool _isMoving = false;
+    private bool _isMoving;
     protected bool IsMoving
     {
         get => _isMoving;
@@ -38,13 +39,15 @@ public abstract class Enemy : MonoBehaviour
             animator.SetBool(Moving, value);
         }
     }
+    // ReSharper disable once InconsistentNaming
     protected Phase _phase = Phase.ApproachArea;
-    protected Vector2 _workPosition;
-    private float _workCompletion = 0f;
+    protected Vector2 WorkPosition;
+    private float _workCompletion;
 
     private void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
+        _evn = spriteRenderer.GetComponent<EnemyVisibilityNotifier>();
         _health = maxHealth;
     }
 
@@ -79,6 +82,7 @@ public abstract class Enemy : MonoBehaviour
         if (_health > 0) return;
         ScoreHandler.Instance.Score += ScoreHandler.Instance.scoreValues.kill;
         Dispose();
+        ReturnMarker();
         Destroy(gameObject);
         GameHandler.Instance.EnemyRemoved(this);
     }
@@ -89,6 +93,8 @@ public abstract class Enemy : MonoBehaviour
     {
         Act();
         Kill();
+        
+        ShowHideMarker();
     }
 
     private void Act()
@@ -122,7 +128,7 @@ public abstract class Enemy : MonoBehaviour
     private void ApproachArea()
     {
         IsMoving = true;
-        _moveDirection = (Vector2.zero - (Vector2)transform.position).normalized;
+        MoveDirection = (Vector2.zero - (Vector2)transform.position).normalized;
 
         if (!(Vector2.Distance(transform.position, Vector2.zero) < 5.0f)) return;
         _phase = Phase.MoveToField;
@@ -131,7 +137,7 @@ public abstract class Enemy : MonoBehaviour
 
     protected void SetMoveDirectionTowards(Vector2 target)
     {
-        _moveDirection = (target - (Vector2)transform.position).normalized;
+        MoveDirection = (target - (Vector2)transform.position).normalized;
     }
 
     protected abstract void MoveToField();
@@ -140,7 +146,7 @@ public abstract class Enemy : MonoBehaviour
 
     private void Work()
     {
-        if (Vector2.Distance(transform.position, _workPosition) > 0.1f)
+        if (Vector2.Distance(transform.position, WorkPosition) > 0.1f)
         {
             Debug.Log("Returning to work position");
             animator.SetBool(IsWorking, false);
@@ -223,6 +229,7 @@ public abstract class Enemy : MonoBehaviour
         if (!(Vector2.Distance(transform.position, Vector2.left * 15f) < 0.1f)) return;
         Dispose();
         GameHandler.Instance.EnemyRemoved(this);
+        ReturnMarker();
         Destroy(gameObject);
     }
 
@@ -239,8 +246,8 @@ public abstract class Enemy : MonoBehaviour
             return;
         }
 
-        _rb.velocity = _moveDirection * (moveSpeed * Time.fixedDeltaTime * 16f);
-        transform.localScale = _moveDirection.x switch
+        _rb.velocity = MoveDirection * (moveSpeed * Time.fixedDeltaTime * 16f);
+        transform.localScale = MoveDirection.x switch
         {
             //Flip sprite based on movement direction
             > 0 => new Vector3(1, 1, 1),
@@ -266,4 +273,41 @@ public abstract class Enemy : MonoBehaviour
         other.transform.position += (Vector3)directionOtherToThis * -thisAmount * 0.1f * knockBackStrength;
     }
 
+    private bool IsVisible => _evn.IsVisible;
+
+    #region Enemy Marker
+
+    private MarkerScript _marker;
+    
+    public bool HasMarker { get; private set; }
+
+    public void AssignMarker(MarkerScript marker)
+    {
+        _marker = marker;
+        marker.SetTarget(transform);
+        _marker.gameObject.SetActive(true);
+        HasMarker = true;
+    }
+
+    private void ReturnMarker()
+    {
+        if (!HasMarker)
+        {
+            return;
+        }
+        HasMarker = false;
+        GameHandler.Instance.ReturnMarkerToPool(_marker);
+        _marker = null;
+    }
+
+    private void ShowHideMarker()
+    {
+        if (HasMarker)
+        {
+            _marker.gameObject.SetActive(!IsVisible);
+        }
+    } 
+
+    #endregion
+    
 }
