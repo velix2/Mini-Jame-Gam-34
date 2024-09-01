@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -20,6 +21,8 @@ public class GameHandler : MonoBehaviour
     [SerializeField] private float timeBetweenWavesInSecs = 10f;
 
     [SerializeField] private PlayerMovement player;
+    [SerializeField] private ItemSpawner[] itemSpawners;
+    
     
     [SerializeField] private GameObject plowPrefab;
     [SerializeField] private GameObject sowPrefab;
@@ -70,12 +73,22 @@ public class GameHandler : MonoBehaviour
     private void StartIntroPhase()
     {
         StartCoroutine(IntroPhase());
+        foreach (var spawner in itemSpawners)
+        {
+            spawner.OnPrepPhase();
+        }
     }
     
     private IEnumerator IntroPhase()
     {
         //TODO. Explain game
         yield return new WaitForSeconds(prepTimeInSecs);
+        
+        
+        foreach (var spawner in itemSpawners)
+        {
+            spawner.OnWaveStart();
+        }
         StartWave();
     }
     
@@ -128,6 +141,11 @@ public class GameHandler : MonoBehaviour
         _isEnemyMarkersActive = false;
         waveText.UpdateText();
         ScoreHandler.Instance.Score += ScoreHandler.Instance.scoreValues.waveComplete;
+        WipeAllItems();
+        foreach (var spawner in itemSpawners)
+        {
+            spawner.OnPrepPhase();
+        }
         StartCoroutine(PrepPhase());
     }
     
@@ -139,9 +157,8 @@ public class GameHandler : MonoBehaviour
     private void WipeAllItems()
     {
         player.TakeAwayItem();
-        foreach (var item in _itemsAlive)
+        foreach (var item in _itemsAlive.Where(item => item))
         {
-            if (!item) continue;
             Destroy(item.gameObject);
         }
     }

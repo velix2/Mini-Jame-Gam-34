@@ -5,75 +5,53 @@ using UnityEngine;
 
 public class ItemSpawner : MonoBehaviour
 {
-    [SerializeField] private float spawnCooldownInSeconds = 20f;
     [SerializeField] private GameObject itemPrefab;
     [SerializeField] private ProgressBarInWorld progressBarInWorld;
+    [SerializeField] private int[] itemsPerWave;
+    private int _numberOfItemsCurrentWave;
+    private int _numberOfItemsSpawned;
     
-    private bool _isProductionActive;
-
     private Item _currentItem;
 
-    private void Start()
+    public void OnPrepPhase()
     {
+        StopAllCoroutines();
+        progressBarInWorld.SetVisible(false);
+        
+        _numberOfItemsCurrentWave = itemsPerWave[Math.Clamp(GameHandler.Instance.CurrentWave, 0, itemsPerWave.Length - 1)];
+        _numberOfItemsSpawned = 0;
+        progressBarInWorld.SetMaxValue(_numberOfItemsCurrentWave);
+        progressBarInWorld.SetValue(_numberOfItemsCurrentWave);
         CreateItem();
     }
 
-    private void Update()
+    public void OnWaveStart()
     {
-        if (GameHandler.Instance.IsWaveInProgress)
-        {
-            if(_isProductionActive) return;
-            _isProductionActive = true;
-             StartCoroutine(SpawnItems());
-        }
-        else
-        {
-            if(!_isProductionActive) return;
-            _isProductionActive = false;
-            StopAllCoroutines();
-            progressBarInWorld.SetVisible(false);
-            CreateItem();
-        }
+        progressBarInWorld.SetVisible(true);
+        StartCoroutine(SpawnItems());
     }
+
 
     private IEnumerator SpawnItems()
     {
-        while (_isProductionActive)
+        while (_numberOfItemsSpawned < _numberOfItemsCurrentWave)
         {
             yield return new WaitUntil(() => !_currentItem.IsInSpawner);
-            AnimateProgressBar();
-            yield return new WaitForSeconds(spawnCooldownInSeconds);
             CreateItem();
+            progressBarInWorld.SetValue(_numberOfItemsCurrentWave - _numberOfItemsSpawned);
         }
-    }
-
-    private void AnimateProgressBar()
-    {
-        progressBarInWorld.SetVisible(true);
-        progressBarInWorld.SetMaxValue(spawnCooldownInSeconds);
-        progressBarInWorld.SetValue(0f);
-        StartCoroutine(ProgressBarAnimation());
     }
     
-    private IEnumerator ProgressBarAnimation()
-    {
-        float time = 0f;
-        while (time < spawnCooldownInSeconds)
-        {
-            progressBarInWorld.SetValue(time);
-            time += Time.deltaTime;
-            yield return null;
-        }
-        progressBarInWorld.SetVisible(false);
-    }
 
     private void CreateItem()
     {
         //If there is an item in the spawner, don't create a new one
         if (_currentItem && _currentItem.IsInSpawner) return;
+        Debug.Log("Creating item");
         var item = Instantiate(itemPrefab, transform.position, Quaternion.identity).GetComponent<Item>();
         item.IsInSpawner = true;
         _currentItem = item;
+        _numberOfItemsSpawned++;
         GameHandler.Instance.ReportItemSpawn(item);
     }
     
