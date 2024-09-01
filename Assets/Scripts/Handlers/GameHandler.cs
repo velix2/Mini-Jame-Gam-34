@@ -8,6 +8,7 @@ public class GameHandler : MonoBehaviour
 {
     public static GameHandler Instance;
     public bool IsWaveInProgress { get; private set; }
+    public int CurrentWave => _currentWave + 1;
     
     [SerializeField] private Transform[] enemySpawnPoints;
     [SerializeField] private int[] enemySpawnsPerWave;
@@ -23,6 +24,8 @@ public class GameHandler : MonoBehaviour
     [SerializeField] private GameObject waterPrefab;
     [SerializeField] private GameObject enemyMarkerPrefab;
     [SerializeField] private GameObject markerHolder;
+    [SerializeField] private WaveText waveText;
+    
     
     
     [System.Serializable]
@@ -34,6 +37,8 @@ public class GameHandler : MonoBehaviour
     }
     
     [SerializeField] private SpawnChances spawnChances;
+    [SerializeField] private int extraEnemiesPerWave = 2;
+    
     
     private int _currentWave = -1;
     private readonly List<Enemy> _enemiesAlive = new ();
@@ -55,15 +60,15 @@ public class GameHandler : MonoBehaviour
     
     private void Start()
     {
-        StartPrepPhase();
+        StartIntroPhase();
     }
     
-    private void StartPrepPhase()
+    private void StartIntroPhase()
     {
-        StartCoroutine(PrepPhase());
+        StartCoroutine(IntroPhase());
     }
     
-    private IEnumerator PrepPhase()
+    private IEnumerator IntroPhase()
     {
         //TODO. Explain game
         yield return new WaitForSeconds(prepTimeInSecs);
@@ -74,8 +79,16 @@ public class GameHandler : MonoBehaviour
     {
         _isEnemyMarkersActive = false;
         _currentWave++;
-        _enemiesToSpawn = enemySpawnsPerWave[_currentWave];
+        if (_currentWave >= enemySpawnsPerWave.Length)
+        {
+            _enemiesToSpawn = enemySpawnsPerWave[enemySpawnPoints.Length] + extraEnemiesPerWave * (1 + _currentWave - enemySpawnPoints.Length);
+        }
+        else
+        {
+            _enemiesToSpawn = enemySpawnsPerWave[_currentWave];
+        }
         IsWaveInProgress = true;
+        waveText.UpdateText();
         StartCoroutine(SpawnEnemies());
     }
     
@@ -99,11 +112,25 @@ public class GameHandler : MonoBehaviour
             float randomTimeBetweenSpawns = Random.Range(timeBetweenSpawnsInSecs * 0.75f, timeBetweenSpawnsInSecs * 1.25f);
             yield return new WaitForSeconds(randomTimeBetweenSpawns);
         }
-        //Wave complete
+        Debug.Log("All enemies spawned");
+        yield return new WaitUntil(() => EnemiesAliveCount == 0);
+        CompleteWave();
+    }
+
+    private void CompleteWave()
+    {
         Debug.Log("Wave complete");
         IsWaveInProgress = false;
+        _isEnemyMarkersActive = false;
+        waveText.UpdateText();
         ScoreHandler.Instance.Score += ScoreHandler.Instance.scoreValues.waveComplete;
+        StartCoroutine(PrepPhase());
+    }
+    
+    private IEnumerator PrepPhase()
+    {
         yield return new WaitForSeconds(timeBetweenWavesInSecs);
+        StartWave();
     }
     
     private GameObject GetRandomEnemyPrefab()
@@ -124,16 +151,17 @@ public class GameHandler : MonoBehaviour
     {
         _enemiesAlive.Remove(enemy);
         
-        if (EnemiesAliveCount + _enemiesToSpawn <= enemiesLeftForMarker)
-        {
-            _isEnemyMarkersActive = true;
-            Debug.Log("Markers active");
-            AssignMarkersToEnemies();
-        } else if (EnemiesAliveCount + _enemiesToSpawn == 0)
+        if (EnemiesAliveCount + _enemiesToSpawn == 0)
         {
             _isEnemyMarkersActive = false;
             Debug.Log("Markers inactive");
         }
+        else if (EnemiesAliveCount + _enemiesToSpawn <= enemiesLeftForMarker && !_isEnemyMarkersActive)
+        {
+            _isEnemyMarkersActive = true;
+            Debug.Log("Markers active");
+            AssignMarkersToEnemies();
+        } 
 
     }
 

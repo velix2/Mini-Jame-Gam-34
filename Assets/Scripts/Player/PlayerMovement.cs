@@ -52,20 +52,12 @@ public class PlayerMovement : MonoBehaviour
         PickUpDrop();
         Interact();
         Trample();
-        //DebugMethod();
     }
-    
 
-    private void DebugMethod()
-    {
-        if (Input.GetKeyDown(KeyCode.G))
-        {
-            FieldHandler.Instance.CreateFieldTile(transform.position);
-        }
-    }
 
     private void Interact()
     {
+        if (!GameHandler.Instance.IsWaveInProgress) return;
         if (!Input.GetKeyDown(KeyCode.Space)) return;
         if (_currentItemType == ItemType.None) return;
         UseItem();
@@ -240,6 +232,14 @@ public class PlayerMovement : MonoBehaviour
 
     private void Trample()
     {
+        if (!GameHandler.Instance.IsWaveInProgress)
+        {
+            if (!_isTrampling) return;
+            _isTrampling = false;
+            StopCoroutine(_trampleCoroutine);
+            return;
+        }
+
         if (_rb.velocity.magnitude < 0.1f && _currentItemType == ItemType.None && !_isTrampling && Input.GetKeyDown(KeyCode.LeftControl))
         {
             _isTrampling = true;

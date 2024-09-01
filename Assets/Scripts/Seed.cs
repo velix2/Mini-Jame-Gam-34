@@ -60,6 +60,8 @@ public class Seed : MonoBehaviour
     //TODO: Make this more efficient
     private void Update()
     {
+        //Only allow growth during waves
+        if (!GameHandler.Instance.IsWaveInProgress) return;
         _growthTimer += Time.deltaTime;
         if (_growthTimer >= _growthTime0 && _growthStage == GrowthStages.Growing0)
         {
