@@ -247,6 +247,7 @@ public class PlayerMovement : MonoBehaviour
         {
             if (!_isTrampling) return;
             _isTrampling = false;
+            animator.SetBool(IsTrampling, false);
             StopCoroutine(_trampleCoroutine);
             return;
         }
@@ -260,6 +261,8 @@ public class PlayerMovement : MonoBehaviour
         else if (_isTrampling && Input.GetKeyUp(KeyCode.LeftControl))
         {
             _isTrampling = false;
+            animator.SetBool(IsTrampling, false);
+
             StopCoroutine(_trampleCoroutine);
         }
     }

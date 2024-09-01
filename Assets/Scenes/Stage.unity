@@ -376,7 +376,7 @@ GameObject:
   - component: {fileID: 61570756}
   - component: {fileID: 61570755}
   - component: {fileID: 61570754}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Player Map Bondaries
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -18857,6 +18857,7 @@ MonoBehaviour:
   player: {fileID: 2131785000}
   itemSpawners:
   - {fileID: 1640844547}
+  - {fileID: 1275944267}
   plowPrefab: {fileID: 8179489185913958351, guid: da618e1fbc8c2ad46922da365eca6e27, type: 3}
   sowPrefab: {fileID: 635752072688632661, guid: 4a4f13c4f025f014fa389712e3b6b8ba, type: 3}
   waterPrefab: {fileID: 946479201555975808, guid: b1cfc62376508584185d7c9fe22287d2, type: 3}
@@ -19841,6 +19842,17 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1275578187}
   m_CullTransparentMesh: 1
+--- !u!114 &1275944267 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6750629941002054089, guid: fbe4e58161075db4f9f0c2c7a96f7ef1, type: 3}
+  m_PrefabInstance: {fileID: 523907960}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70ce36be58b02ee4290ff0a837022005, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1315079215
 GameObject:
   m_ObjectHideFlags: 0

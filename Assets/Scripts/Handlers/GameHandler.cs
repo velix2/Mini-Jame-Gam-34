@@ -12,13 +12,13 @@ public class GameHandler : MonoBehaviour
     
     public static GameHandler Instance;
     public bool IsWaveInProgress { get; private set; }
+    public bool IsGameOver { get; private set; }
     public int CurrentWave => _currentWave + 1;
     
     [SerializeField] private int[] enemySpawnsPerWave;
     [SerializeField] private int maxEnemiesAlive = 10;
     [SerializeField] private int enemiesLeftForMarker = 3;
     [SerializeField] private float timeBetweenSpawnsInSecs = 5f;
-    [SerializeField] private float introTimeInSecs = 20f;
     [SerializeField] private float timeBetweenWavesInSecs = 10f;
 
     [SerializeField] private int tomatoesToGameOver = 50;
@@ -67,7 +67,16 @@ public class GameHandler : MonoBehaviour
         Instance = this;
         SetUpPool();
     }
-    
+
+    private void Update()
+    {
+        //Debug: if g is pressed, game over
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            SubmitTomatoes(99);
+        }
+    }
+
     private void Start()
     {
         if(DEBUG_DISABLE_START) return;
@@ -78,11 +87,12 @@ public class GameHandler : MonoBehaviour
     {
         TomatoesCollected += tomatoes;
         tomatoText.UpdateText();
-        
-        if(TomatoesCollected >= tomatoesToGameOver)
-        {
-            Debug.Log("Game over");
-        }
+
+        //Game over
+        if (TomatoesCollected < tomatoesToGameOver) return;
+        IsGameOver = true;
+        Time.timeScale = 0f;
+        Debug.Log("Game over");
     }
     
     public int TomatoesCollected { get; private set; }
@@ -129,7 +139,6 @@ public class GameHandler : MonoBehaviour
     
     private IEnumerator SpawnEnemies()
     {
-        yield return new WaitForSeconds(introTimeInSecs);
         while (_enemiesToSpawn > 0)
         {
             int randomSpawnPointIndex = Random.Range(0, GameAreaHandler.Instance.EnemySpawnPoints.Length);

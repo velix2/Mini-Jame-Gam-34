@@ -8,11 +8,6 @@ public class PlayerFollow : MonoBehaviour
     [SerializeField] private float offset;
     
     
-    void Start()
-    {
-            
-    }
-
     // Update is called once per frame
     void Update()
     {
