@@ -10,6 +10,8 @@ public abstract class Item : MonoBehaviour
     private Collider2D _collider;
     private Sprite _spriteDefault;
 
+    public bool IsInSpawner { get; set; }
+
     public virtual void Awake()
     {
         Debug.Log("Item awake");
@@ -28,6 +30,8 @@ public abstract class Item : MonoBehaviour
 
     public void PickUp(GameObject itemHolder)
     {
+        IsInSpawner = false;
+        
         spriteRenderer.enabled = false;
         _collider.enabled = false;
         

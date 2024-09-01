@@ -19,6 +19,7 @@ public class GameHandler : MonoBehaviour
     [SerializeField] private float prepTimeInSecs = 3f;
     [SerializeField] private float timeBetweenWavesInSecs = 10f;
 
+    [SerializeField] private PlayerMovement player;
     
     [SerializeField] private GameObject plowPrefab;
     [SerializeField] private GameObject sowPrefab;
@@ -43,6 +44,7 @@ public class GameHandler : MonoBehaviour
     
     private int _currentWave = -1;
     private readonly List<Enemy> _enemiesAlive = new ();
+    private readonly HashSet<Item> _itemsAlive = new ();
     private int _enemiesToSpawn;
     
     private int EnemiesAliveCount => _enemiesAlive.Count;
@@ -127,6 +129,21 @@ public class GameHandler : MonoBehaviour
         waveText.UpdateText();
         ScoreHandler.Instance.Score += ScoreHandler.Instance.scoreValues.waveComplete;
         StartCoroutine(PrepPhase());
+    }
+    
+    public void ReportItemSpawn(Item item)
+    {
+        _itemsAlive.Add(item);
+    }
+
+    private void WipeAllItems()
+    {
+        player.TakeAwayItem();
+        foreach (var item in _itemsAlive)
+        {
+            if (!item) continue;
+            Destroy(item.gameObject);
+        }
     }
     
     private IEnumerator PrepPhase()

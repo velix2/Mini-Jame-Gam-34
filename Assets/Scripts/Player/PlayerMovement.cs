@@ -144,6 +144,17 @@ public class PlayerMovement : MonoBehaviour
         animator.SetInteger(ItemId, (int)_currentItemType);
     }
 
+    public void TakeAwayItem()
+    {
+        if (_currentItemType == ItemType.None) return;
+        
+        durabilityBar.SetVisible(false);
+        animator.SetInteger(ItemId, 0);
+        Destroy(_currentItem.gameObject);
+        _currentItemType = ItemType.None;
+        _currentItem = null;
+    }
+
     private void FixedUpdate()
     {
         Move();
