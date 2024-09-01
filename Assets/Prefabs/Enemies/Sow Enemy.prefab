@@ -47,13 +47,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aba89d879f8bfdc40bfc5e2c0602fdbd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 5
+  moveSpeed: 7
   maxHealth: 3
   spriteRenderer: {fileID: 4230197083466080640}
   workSpeed: 1
-  knockBackStrength: 1
+  knockBackStrength: 1.5
   animator: {fileID: 2728652284573953588}
-  maxWanderDurationInSeconds: 15
+  maxWanderDurationInSeconds: 20
 --- !u!50 &3184130226159995183
 Rigidbody2D:
   serializedVersion: 4

@@ -18530,7 +18530,6 @@ GameObject:
   - component: {fileID: 703416879}
   - component: {fileID: 703416883}
   - component: {fileID: 703416882}
-  - component: {fileID: 703416881}
   - component: {fileID: 703416880}
   m_Layer: 5
   m_Name: Tomato Text
@@ -18570,18 +18569,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d037ccb164a64c6eac005156a0292c54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &703416881
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 703416878}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7fb25543aab868e4a9b121b304a884a5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &703416882
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18602,7 +18589,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: x 00/40
+  m_text: x 00/XX
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 2b9441ae38c2d5d4fa6ed54ad52426e7, type: 2}
   m_sharedMaterial: {fileID: 4426404756772010681, guid: 2b9441ae38c2d5d4fa6ed54ad52426e7, type: 2}
@@ -18859,13 +18846,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ea4f6686349834419831bf8394edc5b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DEBUG_DISABLE_START: 1
-  enemySpawnsPerWave: 050000000600000008000000
+  DEBUG_DISABLE_START: 0
+  enemySpawnsPerWave: 05000000060000000800000009000000090000000a0000000c0000000c0000000e0000000f000000
   maxEnemiesAlive: 10
   enemiesLeftForMarker: 3
-  timeBetweenSpawnsInSecs: 3
+  timeBetweenSpawnsInSecs: 5
   introTimeInSecs: 20
-  timeBetweenWavesInSecs: 10
+  timeBetweenWavesInSecs: 15
   tomatoesToGameOver: 50
   player: {fileID: 2131785000}
   itemSpawners:
@@ -18876,8 +18863,8 @@ MonoBehaviour:
   enemyMarkerPrefab: {fileID: 1356044214363007750, guid: 754a12933133d8545be30dccb2a28514, type: 3}
   markerHolder: {fileID: 871068023}
   waveText: {fileID: 1530770858}
-  tomatoText: {fileID: 0}
-  tutorialHolder: {fileID: 0}
+  tomatoText: {fileID: 703416880}
+  tutorialHolder: {fileID: 897280126}
   spawnChances:
     plowChance: 0.45
     sowChance: 0.35
@@ -22777,7 +22764,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d911adaaa4a1844458dbaa3d4adfccfa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fieldMap: {fileID: 1490558389}
+  fieldMap: {fileID: 700437867}
   fieldTilePrefab: {fileID: 11400000, guid: dd037fa36dad04a45b42dbdbb17f0312, type: 2}
   fieldTileWateredPrefab: {fileID: 11400000, guid: f8ebade10eeaba349b5dae7708b4258d, type: 2}
   seedPrefab: {fileID: 6003610704863065089, guid: 1e250f04b44242e48a23c8b1a0bf4f2a, type: 3}
