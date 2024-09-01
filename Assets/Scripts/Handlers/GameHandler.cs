@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 public class GameHandler : MonoBehaviour
@@ -17,8 +18,10 @@ public class GameHandler : MonoBehaviour
     [SerializeField] private int maxEnemiesAlive = 10;
     [SerializeField] private int enemiesLeftForMarker = 3;
     [SerializeField] private float timeBetweenSpawnsInSecs = 5f;
-    [SerializeField] private float prepTimeInSecs = 3f;
+    [SerializeField] private float introTimeInSecs = 20f;
     [SerializeField] private float timeBetweenWavesInSecs = 10f;
+
+    [SerializeField] private int tomatoesToGameOver = 50;
 
     [SerializeField] private PlayerMovement player;
     [SerializeField] private ItemSpawner[] itemSpawners;
@@ -30,7 +33,8 @@ public class GameHandler : MonoBehaviour
     [SerializeField] private GameObject enemyMarkerPrefab;
     [SerializeField] private GameObject markerHolder;
     [SerializeField] private WaveText waveText;
-    
+    [SerializeField] private TomatoText tomatoText;
+    [SerializeField] private GameObject tutorialHolder;
     
     
     [System.Serializable]
@@ -49,7 +53,7 @@ public class GameHandler : MonoBehaviour
     private readonly List<Enemy> _enemiesAlive = new ();
     private readonly HashSet<Item> _itemsAlive = new ();
     private int _enemiesToSpawn;
-    
+
     private int EnemiesAliveCount => _enemiesAlive.Count;
     
     private void Awake()
@@ -70,6 +74,21 @@ public class GameHandler : MonoBehaviour
         StartIntroPhase();
     }
     
+    public void SubmitTomatoes(int tomatoes)
+    {
+        TomatoesCollected += tomatoes;
+        tomatoText.UpdateText();
+        
+        if(TomatoesCollected >= tomatoesToGameOver)
+        {
+            Debug.Log("Game over");
+        }
+    }
+    
+    public int TomatoesCollected { get; private set; }
+
+    public int TomatoesToGameOver => tomatoesToGameOver;
+
     private void StartIntroPhase()
     {
         StartCoroutine(IntroPhase());
@@ -81,9 +100,8 @@ public class GameHandler : MonoBehaviour
     
     private IEnumerator IntroPhase()
     {
-        //TODO. Explain game
-        yield return new WaitForSeconds(prepTimeInSecs);
-        
+        yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
+        tutorialHolder.SetActive(false);
         
         foreach (var spawner in itemSpawners)
         {
@@ -111,7 +129,7 @@ public class GameHandler : MonoBehaviour
     
     private IEnumerator SpawnEnemies()
     {
-        yield return new WaitForSeconds(prepTimeInSecs);
+        yield return new WaitForSeconds(introTimeInSecs);
         while (_enemiesToSpawn > 0)
         {
             int randomSpawnPointIndex = Random.Range(0, GameAreaHandler.Instance.EnemySpawnPoints.Length);
