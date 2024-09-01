@@ -16,8 +16,8 @@ TagManager:
   - UI
   - Item
   - Enemy
-  - 
-  - 
+  - MapBoundaries
+  - Player
   - 
   - 
   - 
@@ -46,6 +46,9 @@ TagManager:
     locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Border
+    uniqueID: 2185359291
     locked: 0
   - name: In World UI
     uniqueID: 1365442637

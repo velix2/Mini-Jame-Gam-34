@@ -153,10 +153,10 @@ MonoBehaviour:
   spriteRenderer: {fileID: 5434187337395606133}
   highlighter: {fileID: 5384217379968365854}
   wateredGrowthDurationMultiplier: 0.5
-  growthTime0To1: 5
-  growthTime1ToRipe: 25
-  growthTimeRipeToDead: 500
-  maxDeviation: 1
+  growthTime0To1: 20
+  growthTime1ToRipe: 30
+  growthTimeRipeToDead: 20
+  maxDeviation: 5
 --- !u!61 &-6456603655848141346
 BoxCollider2D:
   m_ObjectHideFlags: 0
