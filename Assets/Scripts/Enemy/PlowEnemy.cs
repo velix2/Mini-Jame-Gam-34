@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class PlowEnemy : Enemy
 {
@@ -32,10 +33,7 @@ public class PlowEnemy : Enemy
         _hasFieldReserved = true;
     }
 
-    protected override void Wander()
-    {
-        
-    }
+    protected override bool WanderEndCondition => true;
 
     protected override void OnWorkCompleted()
     {

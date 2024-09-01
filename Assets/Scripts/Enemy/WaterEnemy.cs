@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class WaterEnemy : Enemy
 {
@@ -26,12 +27,12 @@ public class WaterEnemy : Enemy
         //Get new target position
         if (!_hasTargetPosition)
         {
-            //If no field tiles exist, go to harvest
+            //If no field tiles exist, wander
             if (!FieldHandler.Instance.DoUnwateredTilesExist())
             {
-                _phase = Phase.Harvest;
+                _phase = Phase.Wander;
                 _hasTargetPosition = false;
-                Debug.Log("Harvesting");
+                Debug.Log("Wandering");
                 return;
             }
             
@@ -50,11 +51,8 @@ public class WaterEnemy : Enemy
         IsMoving = true;
         SetMoveDirectionTowards(_targetPosition);
     }
-
-    protected override void Wander()
-    {
-        
-    }
+    
+    protected override bool WanderEndCondition => FieldHandler.Instance.DoUnwateredTilesExist();
 
     protected override void OnWorkCompleted()
     {

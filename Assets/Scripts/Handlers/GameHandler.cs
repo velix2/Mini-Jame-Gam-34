@@ -6,6 +6,8 @@ using Random = UnityEngine.Random;
 
 public class GameHandler : MonoBehaviour
 {
+    [SerializeField] private bool DEBUG_DISABLE_START;
+    
     public static GameHandler Instance;
     public bool IsWaveInProgress { get; private set; }
     public int CurrentWave => _currentWave + 1;
@@ -60,6 +62,7 @@ public class GameHandler : MonoBehaviour
     
     private void Start()
     {
+        if(DEBUG_DISABLE_START) return;
         StartIntroPhase();
     }
     

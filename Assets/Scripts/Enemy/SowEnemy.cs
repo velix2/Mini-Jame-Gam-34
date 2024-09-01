@@ -30,7 +30,7 @@ public class SowEnemy : Enemy
         if (!_hasTargetPosition)
         {
             //If no field tiles exist, wander
-            if (!FieldHandler.Instance.DoFieldTilesExist())
+            if (!FieldHandler.Instance.DoEmptyPlowedFieldsExist())
             {
                 _phase = Phase.Wander;
                 _hasTargetPosition = false;
@@ -54,30 +54,9 @@ public class SowEnemy : Enemy
         SetMoveDirectionTowards(_targetPosition);
     }
     
-
-    //Wander to random position until field tiles exist
-    protected override void Wander()
-    {
-        IsMoving = true;
-        
-        if (Vector3.Distance(_targetPosition, transform.position) < 0.1f)
-        {
-            _hasTargetPosition = false;
-        }
-        
-        if (!_hasTargetPosition)
-        {
-            _targetPosition = GameAreaHandler.Instance.GetRandomWorldPositionInsideGameArea();
-            _hasTargetPosition = true;
-        }
-        MoveDirection = ((Vector2)_targetPosition - (Vector2) transform.position).normalized;
-
-        if (!FieldHandler.Instance.DoFieldTilesExist()) return;
-        _phase = Phase.MoveToField;
-        _hasTargetPosition = false;
-        Debug.Log("Moving to field");
-    }
-
+    protected override bool WanderEndCondition => FieldHandler.Instance.DoEmptyPlowedFieldsExist();
+    
+    
     protected override void OnWorkCompleted()
     {
         FieldHandler.Instance.PlantSeed(FieldHandler.Instance.WorldToCell(WorkPosition));

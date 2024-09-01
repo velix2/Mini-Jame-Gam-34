@@ -53,6 +53,7 @@ MonoBehaviour:
   workSpeed: 1
   knockBackStrength: 1
   animator: {fileID: 2728652284573953588}
+  maxWanderDurationInSeconds: 15
 --- !u!50 &3184130226159995183
 Rigidbody2D:
   serializedVersion: 4

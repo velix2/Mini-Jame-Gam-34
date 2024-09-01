@@ -135,7 +135,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00bebe70b09dc5548a1da050c55c91c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemy: {fileID: 0}
 --- !u!1 &4536231686373106081
 GameObject:
   m_ObjectHideFlags: 0
@@ -288,6 +287,7 @@ MonoBehaviour:
   workSpeed: 1
   knockBackStrength: 1
   animator: {fileID: 8331367768176144847}
+  maxWanderDurationInSeconds: 5
 --- !u!50 &2797017921009974118
 Rigidbody2D:
   serializedVersion: 4

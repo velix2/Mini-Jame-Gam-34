@@ -65,6 +65,11 @@ public class FieldHandler : MonoBehaviour
         return _fieldTiles.Count > 0;
     }
     
+    public bool DoEmptyPlowedFieldsExist()
+    {
+        return _fieldTiles.Count > _seeds.Count;
+    }
+    
     public bool DoesEmptyPlowedFieldWithWorldCoordsExist(Vector3 worldPosition)
     {
         Vector3Int gridPosition = fieldMap.WorldToCell(worldPosition);

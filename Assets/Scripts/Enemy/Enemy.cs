@@ -142,7 +142,46 @@ public abstract class Enemy : MonoBehaviour
 
     protected abstract void MoveToField();
 
-    protected abstract void Wander();
+    
+    private Vector3 _wanderTargetPosition;
+    private bool _hasWanderTargetPosition;
+    [SerializeField] private float maxWanderDurationInSeconds = 5f;
+    private float _wanderDuration;
+
+    private void Wander()
+    {
+        _wanderDuration += Time.deltaTime;
+        if (_wanderDuration > maxWanderDurationInSeconds)
+        {
+            _phase = Phase.Harvest;
+            Debug.Log("Go To Harvest");
+            return;
+        }
+        IsMoving = true;
+        
+        if (Vector3.Distance(_wanderTargetPosition, transform.position) < 0.1f)
+        {
+            _hasWanderTargetPosition = false;
+            
+        }
+        
+        if (!_hasWanderTargetPosition)
+        {
+            _wanderTargetPosition = GameAreaHandler.Instance.GetRandomWorldPositionInsideGameArea();
+            _hasWanderTargetPosition = true;
+        }
+        MoveDirection = ((Vector2)_wanderTargetPosition - (Vector2) transform.position).normalized;
+
+        if (!WanderEndCondition) return;
+        _phase = Phase.MoveToField;
+        _hasWanderTargetPosition = false;
+        Debug.Log("Moving to field");
+    }
+
+    protected abstract bool WanderEndCondition
+    {
+        get;
+    }
 
     private void Work()
     {
@@ -219,8 +258,7 @@ public abstract class Enemy : MonoBehaviour
         }
 
     }
-
-
+    
     private void ReturnToBase()
     {
         IsMoving = true;
@@ -278,7 +316,6 @@ public abstract class Enemy : MonoBehaviour
     #region Enemy Marker
 
     private MarkerScript _marker;
-    
     public bool HasMarker { get; private set; }
 
     public void AssignMarker(MarkerScript marker)
