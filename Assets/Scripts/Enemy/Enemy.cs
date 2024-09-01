@@ -4,7 +4,7 @@ using UnityEngine;
 
 public abstract class Enemy : MonoBehaviour
 {
-    public enum Phase
+    protected enum Phase
     {
         ApproachArea,
         MoveToField,
@@ -80,6 +80,7 @@ public abstract class Enemy : MonoBehaviour
         ScoreHandler.Instance.Score += ScoreHandler.Instance.scoreValues.kill;
         Dispose();
         Destroy(gameObject);
+        GameHandler.Instance.EnemyRemoved(this);
     }
 
     protected abstract void Dispose();
@@ -123,11 +124,9 @@ public abstract class Enemy : MonoBehaviour
         IsMoving = true;
         _moveDirection = (Vector2.zero - (Vector2)transform.position).normalized;
 
-        if (Vector2.Distance(transform.position, Vector2.zero) < 5.0f)
-        {
-            _phase = Phase.MoveToField;
-            Debug.Log("Moving to field");
-        }
+        if (!(Vector2.Distance(transform.position, Vector2.zero) < 5.0f)) return;
+        _phase = Phase.MoveToField;
+        Debug.Log("Moving to field");
     }
 
     protected void SetMoveDirectionTowards(Vector2 target)
@@ -165,7 +164,7 @@ public abstract class Enemy : MonoBehaviour
         _workCompletion += Time.deltaTime * workSpeed;
     }
 
-    private bool _hasTargetHarvestPosition = false;
+    private bool _hasTargetHarvestPosition;
     private Vector3Int _targetHarvestCellPosition;
     private Vector3 _targetHarvestWorldPosition;
 
@@ -221,11 +220,10 @@ public abstract class Enemy : MonoBehaviour
         IsMoving = true;
         SetMoveDirectionTowards(Vector2.left * 15f);
 
-        if (Vector2.Distance(transform.position, Vector2.left * 15f) < 0.1f)
-        {
-            Dispose();
-            Destroy(gameObject);
-        }
+        if (!(Vector2.Distance(transform.position, Vector2.left * 15f) < 0.1f)) return;
+        Dispose();
+        GameHandler.Instance.EnemyRemoved(this);
+        Destroy(gameObject);
     }
 
     private void FixedUpdate()
@@ -242,15 +240,13 @@ public abstract class Enemy : MonoBehaviour
         }
 
         _rb.velocity = _moveDirection * (moveSpeed * Time.fixedDeltaTime * 16f);
-        //Flip sprite based on movement direction
-        if (_moveDirection.x > 0)
+        transform.localScale = _moveDirection.x switch
         {
-            transform.localScale = new Vector3(1, 1, 1);
-        }
-        else if (_moveDirection.x < 0)
-        {
-            transform.localScale = new Vector3(-1, 1, 1);
-        }
+            //Flip sprite based on movement direction
+            > 0 => new Vector3(1, 1, 1),
+            < 0 => new Vector3(-1, 1, 1),
+            _ => transform.localScale
+        };
     }
 
     private void OnCollisionEnter2D(Collision2D other)
