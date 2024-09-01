@@ -125,12 +125,19 @@ public abstract class Enemy : MonoBehaviour
     }
 
     //TODO: Actually consider the area
+    private bool _hasEntryPosition;
+    private Vector3 _entryPosition;
     private void ApproachArea()
     {
+        if (!_hasEntryPosition)
+        {
+            _entryPosition = GameAreaHandler.Instance.GetClosestEntryPointPosition(transform.position);
+            _hasEntryPosition = true;
+        }
         IsMoving = true;
-        MoveDirection = (Vector2.zero - (Vector2)transform.position).normalized;
+        SetMoveDirectionTowards(_entryPosition);
 
-        if (!(Vector2.Distance(transform.position, Vector2.zero) < 5.0f)) return;
+        if (!(Vector2.Distance(transform.position, _entryPosition) < 0.1f)) return;
         _phase = Phase.MoveToField;
         Debug.Log("Moving to field");
     }
@@ -141,7 +148,6 @@ public abstract class Enemy : MonoBehaviour
     }
 
     protected abstract void MoveToField();
-
     
     private Vector3 _wanderTargetPosition;
     private bool _hasWanderTargetPosition;
@@ -259,16 +265,38 @@ public abstract class Enemy : MonoBehaviour
 
     }
     
+    private bool _hasExitPosition;
+    private Vector3 _exitPosition;
+    private bool _isMovingToDespawn;
     private void ReturnToBase()
     {
-        IsMoving = true;
-        SetMoveDirectionTowards(Vector2.left * 15f);
+        if (!_isMovingToDespawn)
+        {
+            if (!_hasExitPosition)
+            {
+                _exitPosition = GameAreaHandler.Instance.GetClosestEntryPointPosition(transform.position);
+                _hasExitPosition = true;
+            }
 
-        if (!(Vector2.Distance(transform.position, Vector2.left * 15f) < 0.1f)) return;
-        Dispose();
-        GameHandler.Instance.EnemyRemoved(this);
-        ReturnMarker();
-        Destroy(gameObject);
+            IsMoving = true;
+            SetMoveDirectionTowards(_exitPosition);
+
+            if (!(Vector2.Distance(transform.position, _exitPosition) < 0.1f)) return;
+            _isMovingToDespawn = true;
+            _exitPosition = GameAreaHandler.Instance.GetClosestSpawnPointPosition(_exitPosition);
+        }
+        else
+        {
+            IsMoving = true;
+            SetMoveDirectionTowards(_exitPosition);
+            
+            if (!(Vector2.Distance(transform.position, _exitPosition) < 0.1f)) return;
+            Dispose();
+            GameHandler.Instance.EnemyRemoved(this);
+            ReturnMarker();
+            Destroy(gameObject);
+        }
+        
     }
 
     private void FixedUpdate()
@@ -296,6 +324,7 @@ public abstract class Enemy : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D other)
     {
+        if (!other.gameObject.CompareTag("Player")) return;
         Debug.Log("Collision");
         var otherRb = other.rigidbody;
         Vector2 directionOtherToThis = (transform.position - other.transform.position).normalized;

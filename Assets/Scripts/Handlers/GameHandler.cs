@@ -12,7 +12,6 @@ public class GameHandler : MonoBehaviour
     public bool IsWaveInProgress { get; private set; }
     public int CurrentWave => _currentWave + 1;
     
-    [SerializeField] private Transform[] enemySpawnPoints;
     [SerializeField] private int[] enemySpawnsPerWave;
     [SerializeField] private int maxEnemiesAlive = 10;
     [SerializeField] private int enemiesLeftForMarker = 3;
@@ -84,7 +83,7 @@ public class GameHandler : MonoBehaviour
         _currentWave++;
         if (_currentWave >= enemySpawnsPerWave.Length)
         {
-            _enemiesToSpawn = enemySpawnsPerWave[enemySpawnPoints.Length] + extraEnemiesPerWave * (1 + _currentWave - enemySpawnPoints.Length);
+            _enemiesToSpawn = enemySpawnsPerWave[^1] + extraEnemiesPerWave * (1 + _currentWave - enemySpawnsPerWave.Length);
         }
         else
         {
@@ -100,8 +99,8 @@ public class GameHandler : MonoBehaviour
         yield return new WaitForSeconds(prepTimeInSecs);
         while (_enemiesToSpawn > 0)
         {
-            int randomSpawnPointIndex = Random.Range(0, enemySpawnPoints.Length);
-            Transform spawnPoint = enemySpawnPoints[randomSpawnPointIndex];
+            int randomSpawnPointIndex = Random.Range(0, GameAreaHandler.Instance.EnemySpawnPoints.Length);
+            Transform spawnPoint = GameAreaHandler.Instance.EnemySpawnPoints[randomSpawnPointIndex];
             Enemy enemy = Instantiate(GetRandomEnemyPrefab(), spawnPoint.position, Quaternion.identity).GetComponent<Enemy>();
             _enemiesAlive.Add(enemy);
             _enemiesToSpawn--;
