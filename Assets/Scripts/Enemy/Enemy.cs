@@ -23,7 +23,8 @@ public abstract class Enemy : MonoBehaviour
     [SerializeField] private Animator animator;
 
     [SerializeField] private AudioClip[] damageSounds;
-    [SerializeField] private AudioClip deathSound;
+    [SerializeField] private GameObject enemyDeathAudioPlayerPrefab;
+    
     [SerializeField] private AudioClip gruntSound;
 
     [SerializeField] private GameObject damageParticlesPrefab;
@@ -99,7 +100,7 @@ public abstract class Enemy : MonoBehaviour
     {
         if (_health > 0) return;
         ScoreHandler.Instance.Score += ScoreHandler.Instance.scoreValues.kill;
-        _audioSource.PlayOneShot(deathSound);
+        Instantiate(enemyDeathAudioPlayerPrefab, transform.position, Quaternion.identity);
         var main = _damageParticlesComponent.main;
         main.stopAction = ParticleSystemStopAction.Destroy;
         _damageParticlesComponent.Play();

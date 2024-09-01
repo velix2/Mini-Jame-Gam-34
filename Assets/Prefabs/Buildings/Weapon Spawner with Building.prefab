@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 5416120853811114894}
   - component: {fileID: 7690370279854966300}
   - component: {fileID: 5136122758983790706}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Weapon Spawner with Building
   m_TagString: Untagged
   m_Icon: {fileID: 0}

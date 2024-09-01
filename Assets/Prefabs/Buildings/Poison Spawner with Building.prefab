@@ -94,7 +94,7 @@ GameObject:
   - component: {fileID: 7150278095357295575}
   - component: {fileID: 7048373853472900952}
   - component: {fileID: 3479560003354279230}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Poison Spawner with Building
   m_TagString: Untagged
   m_Icon: {fileID: 0}

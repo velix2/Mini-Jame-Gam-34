@@ -293,7 +293,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 6f620e4886fb94b4d9663f3ca6ca311a, type: 3}
   - {fileID: 8300000, guid: 59771aacbd671b24d8567b0e1eb90b74, type: 3}
   - {fileID: 8300000, guid: a1cac1540d6b1a241be8158f2edcd612, type: 3}
-  deathSound: {fileID: 8300000, guid: cf10bf42d316eab4ab9a38caebd95555, type: 3}
+  enemyDeathAudioPlayerPrefab: {fileID: 3477924293834671221, guid: dd97b0c5b6fdb7d47b41f4f14cc39c20, type: 3}
   gruntSound: {fileID: 8300000, guid: 5afa920c0f51e32478f20d0d0585de34, type: 3}
   damageParticlesPrefab: {fileID: 1018001945936804282, guid: c5bf916b9fec562478a350cd6539ab35, type: 3}
   maxWanderDurationInSeconds: 20
