@@ -166,6 +166,10 @@ public class GameHandler : MonoBehaviour
     private IEnumerator PrepPhase()
     {
         yield return new WaitForSeconds(timeBetweenWavesInSecs);
+        foreach (var spawner in itemSpawners)
+        {
+            spawner.OnWaveStart();
+        }
         StartWave();
     }
     

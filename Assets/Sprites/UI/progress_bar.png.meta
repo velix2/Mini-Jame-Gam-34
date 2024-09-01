@@ -264,6 +264,27 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: progress_bar_8
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 0
+        width: 8
+        height: 3
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 84f0edbedee1fb440860d52972402f1b
+      internalID: -489033430
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -283,6 +304,7 @@ TextureImporter:
       progress_bar_5: -275000484
       progress_bar_6: 347182718
       progress_bar_7: -1541609956
+      progress_bar_8: -489033430
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

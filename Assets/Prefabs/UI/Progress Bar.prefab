@@ -98,6 +98,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   progressSprites:
+  - {fileID: -489033430, guid: d6ae23ad295b68f4783d5659b205c68c, type: 3}
   - {fileID: -1541609956, guid: d6ae23ad295b68f4783d5659b205c68c, type: 3}
   - {fileID: 347182718, guid: d6ae23ad295b68f4783d5659b205c68c, type: 3}
   - {fileID: -275000484, guid: d6ae23ad295b68f4783d5659b205c68c, type: 3}
