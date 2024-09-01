@@ -105,7 +105,6 @@ public class PlayerMovement : MonoBehaviour
         durabilityBar.SetValue(_currentItem.Durability);
         if (_currentItem.Durability > 0) return;
         durabilityBar.SetVisible(false);
-        //TODO: Animation switches too early
         animator.SetInteger(ItemId, 0);
         Destroy(_currentItem.gameObject);
         _currentItemType = ItemType.None;

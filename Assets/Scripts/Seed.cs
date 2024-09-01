@@ -58,7 +58,6 @@ public class Seed : MonoBehaviour
         _growthTime2 = growthTimeRipeToDead + Random.Range(-maxDeviation, maxDeviation);
     }
     
-    //TODO: Make this more efficient
     private void Update()
     {
         //Only allow growth during waves
@@ -95,7 +94,6 @@ public class Seed : MonoBehaviour
     }
     
     public void Poison()
-    //TODO. Add particles
     {
         if (_isPoisoned) return;
         _isPoisoned = true;

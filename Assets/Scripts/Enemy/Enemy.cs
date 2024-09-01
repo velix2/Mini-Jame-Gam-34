@@ -82,7 +82,6 @@ public abstract class Enemy : MonoBehaviour
     private void IndicateDamage()
     {
         StartCoroutine(FlashRedOnDamage());
-        //TODO. Add particles
         _damageParticles.transform.position = transform.position;
         _damageParticles.SetActive(true);
         _damageParticlesComponent.Play();
@@ -147,7 +146,6 @@ public abstract class Enemy : MonoBehaviour
         }
     }
 
-    //TODO: Actually consider the area
     private bool _hasEntryPosition;
     private Vector3 _entryPosition;
     private void ApproachArea()

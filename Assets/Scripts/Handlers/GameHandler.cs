@@ -72,14 +72,13 @@ public class GameHandler : MonoBehaviour
         SetUpPool();
     }
 
-    private void Update()
+    /*private void Update()
     {
-        //TODO Debug: if g is pressed, game over
         if (Input.GetKeyDown(KeyCode.G))
         {
             SubmitTomatoes(99);
         }
-    }
+    }*/
 
     private void Start()
     {
