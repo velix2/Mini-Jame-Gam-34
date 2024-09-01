@@ -18,7 +18,6 @@ public class PlayerMovement : MonoBehaviour
     {
         public float swordCooldown = 0.5f;
         public float trampleDurationInSecs = 1.0f;
-
     }
 
     [SerializeField] private MoveSettings moveSettings;
@@ -43,6 +42,7 @@ public class PlayerMovement : MonoBehaviour
 
     void Awake()
     {
+        _audioSource = GetComponent<AudioSource>();
         _rb = GetComponent<Rigidbody2D>();
         _baseAnimationSpeed = animator.speed;
     }
@@ -52,6 +52,20 @@ public class PlayerMovement : MonoBehaviour
         PickUpDrop();
         Interact();
         Trample();
+
+        PlayAudio();
+    }
+
+    private void PlayAudio()
+    {
+        if (_isTrampling || _rb.velocity.magnitude > 0.1f)
+        {
+            if (_audioSource.isPlaying) return;
+            _audioSource.Play();
+        } else
+        {
+            _audioSource.Stop();
+        }
     }
 
 
@@ -204,6 +218,7 @@ public class PlayerMovement : MonoBehaviour
     {
         var enemies = enemyNearbyHandler.GetEnemiesNearby();
         animator.SetBool(IsAttacking, true);
+        _currentItem.PlayUseSound();
         StartCoroutine(DisableIsAttacking());
         foreach (var enemy in enemies)
         {
@@ -221,6 +236,7 @@ public class PlayerMovement : MonoBehaviour
     {
         var seed = itemNearbyHandler.GetSeedNearby();
         if (!seed) return;
+        _currentItem.PlayUseSound();
         seed.Poison();
         GoOnCooldown(1.0f);
         DecreaseDurability();
@@ -240,6 +256,7 @@ public class PlayerMovement : MonoBehaviour
     
     private Coroutine _trampleCoroutine;
     private static readonly int IsTrampling = Animator.StringToHash("isTrampling");
+    private AudioSource _audioSource;
 
     private void Trample()
     {

@@ -2,11 +2,14 @@
 using UnityEngine;
 using UnityEngine.Serialization;
 
+[RequireComponent(typeof(AudioSource))]
 public abstract class Item : MonoBehaviour
 {
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private Sprite spriteHighlighted;
     [SerializeField] private int maxDurability = 8;
+    [SerializeField] private AudioClip useSound;
+    [SerializeField] private AudioClip pickUpSound;
     private Collider2D _collider;
     private Sprite _spriteDefault;
 
@@ -14,6 +17,7 @@ public abstract class Item : MonoBehaviour
 
     public virtual void Awake()
     {
+        _audioSource = GetComponent<AudioSource>();
         Debug.Log("Item awake");
         _collider = GetComponent<Collider2D>();
         _spriteDefault = spriteRenderer.sprite;
@@ -21,7 +25,10 @@ public abstract class Item : MonoBehaviour
     }
 
     protected ItemType itemType;
+    private AudioSource _audioSource;
     
+    public AudioSource AudioSource => _audioSource;
+
     public ItemType ItemType => itemType;
 
     public int Durability { get; set; }
@@ -30,6 +37,7 @@ public abstract class Item : MonoBehaviour
 
     public void PickUp(GameObject itemHolder)
     {
+        _audioSource.PlayOneShot(pickUpSound);
         IsInSpawner = false;
         
         spriteRenderer.enabled = false;
@@ -38,6 +46,8 @@ public abstract class Item : MonoBehaviour
         transform.SetParent(itemHolder.transform);
         transform.localPosition = Vector3.right * 0.5f;
     }
+    
+    public void PlayUseSound() => _audioSource.PlayOneShot(useSound);
     
     public void Drop()
     {
@@ -55,4 +65,5 @@ public abstract class Item : MonoBehaviour
     {
         spriteRenderer.sprite = _spriteDefault;
     }
+    
 }

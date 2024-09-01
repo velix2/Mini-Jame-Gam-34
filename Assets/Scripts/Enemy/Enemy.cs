@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine;
 
+[RequireComponent(typeof(AudioSource))]
 public abstract class Enemy : MonoBehaviour
 {
     protected enum Phase
@@ -20,6 +21,15 @@ public abstract class Enemy : MonoBehaviour
     [SerializeField] private float workSpeed = 1f;
     [SerializeField] private float knockBackStrength = 1f;
     [SerializeField] private Animator animator;
+
+    [SerializeField] private AudioClip[] damageSounds;
+    [SerializeField] private AudioClip deathSound;
+    [SerializeField] private AudioClip gruntSound;
+
+    [SerializeField] private GameObject damageParticlesPrefab;
+    private GameObject _damageParticles;
+    private ParticleSystem _damageParticlesComponent;
+
 
     private static readonly int Moving = Animator.StringToHash("isMoving");
     private static readonly int IsWorking = Animator.StringToHash("isWorking");
@@ -46,6 +56,7 @@ public abstract class Enemy : MonoBehaviour
 
     private void Awake()
     {
+        _audioSource = GetComponent<AudioSource>();
         _rb = GetComponent<Rigidbody2D>();
         _evn = spriteRenderer.GetComponent<EnemyVisibilityNotifier>();
         _health = maxHealth;
@@ -54,12 +65,16 @@ public abstract class Enemy : MonoBehaviour
     private void Start()
     {
         animator.SetBool(Moving, true);
+        _damageParticles = Instantiate(damageParticlesPrefab);
+        _damageParticlesComponent = _damageParticles.GetComponent<ParticleSystem>();
+        _damageParticles.SetActive(false);
     }
 
     public void Damage(int damage)
     {
         _health -= damage;
         ScoreHandler.Instance.Score += ScoreHandler.Instance.scoreValues.damage;
+        _audioSource.PlayOneShot(damageSounds[UnityEngine.Random.Range(0, damageSounds.Length)]);
         IndicateDamage();
     }
 
@@ -67,6 +82,9 @@ public abstract class Enemy : MonoBehaviour
     {
         StartCoroutine(FlashRedOnDamage());
         //TODO. Add particles
+        _damageParticles.transform.position = transform.position;
+        _damageParticles.SetActive(true);
+        _damageParticlesComponent.Play();
     }
 
     private IEnumerator FlashRedOnDamage()
@@ -81,6 +99,10 @@ public abstract class Enemy : MonoBehaviour
     {
         if (_health > 0) return;
         ScoreHandler.Instance.Score += ScoreHandler.Instance.scoreValues.kill;
+        _audioSource.PlayOneShot(deathSound);
+        var main = _damageParticlesComponent.main;
+        main.stopAction = ParticleSystemStopAction.Destroy;
+        _damageParticlesComponent.Play();
         Dispose();
         ReturnMarker();
         Destroy(gameObject);
@@ -203,6 +225,7 @@ public abstract class Enemy : MonoBehaviour
         Debug.Log("Working, completion: " + _workCompletion);
         ProgressWork();
         if (_workCompletion < 1f) return;
+        _audioSource.PlayOneShot(gruntSound);
         OnWorkCompleted();
         animator.SetBool(IsWorking, false);
         _phase = Phase.Harvest;
@@ -346,6 +369,7 @@ public abstract class Enemy : MonoBehaviour
     #region Enemy Marker
 
     private MarkerScript _marker;
+    private AudioSource _audioSource;
     public bool HasMarker { get; private set; }
 
     public void AssignMarker(MarkerScript marker)

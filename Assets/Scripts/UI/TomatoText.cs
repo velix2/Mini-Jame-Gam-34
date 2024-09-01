@@ -20,7 +20,7 @@ public class TomatoText : MonoBehaviour
     public void UpdateText()
     {
 
-        _text.text = GameHandler.Instance.TomatoesCollected.ToString("D2") + "/" + GameHandler.Instance.TomatoesToGameOver.ToString("D2");
+        _text.text = "x " + GameHandler.Instance.TomatoesCollected.ToString("D2") + "/" + GameHandler.Instance.TomatoesToGameOver.ToString("D2");
 
     }
 }

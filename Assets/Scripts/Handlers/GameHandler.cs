@@ -38,6 +38,7 @@ public class GameHandler : MonoBehaviour
 
     [SerializeField] private GameObject normalCanvas;
     [SerializeField] private GameObject gameOverCanvas;
+    [SerializeField] private AudioClip gameOverSound;
     
     
     [System.Serializable]
@@ -73,7 +74,7 @@ public class GameHandler : MonoBehaviour
 
     private void Update()
     {
-        //Debug: if g is pressed, game over
+        //TODO Debug: if g is pressed, game over
         if (Input.GetKeyDown(KeyCode.G))
         {
             SubmitTomatoes(99);
@@ -96,6 +97,7 @@ public class GameHandler : MonoBehaviour
         IsGameOver = true;
         Time.timeScale = 0f;
         Debug.Log("Game over");
+        GetComponent<AudioSource>().PlayOneShot(gameOverSound);
         normalCanvas.SetActive(false);
         gameOverCanvas.SetActive(true);
     }
