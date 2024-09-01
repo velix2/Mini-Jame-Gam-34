@@ -690,7 +690,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   topLeftCorner: {x: -13, y: 7, z: 0}
   bottomRightCorner: {x: 12, y: -8, z: 0}
-  entryPointMaxRandomOffset: 4
+  entryPointMaxRandomOffset: 3
   enemySpawnPointsHolder: {fileID: 686850611}
   enemyEntryPointsHolder: {fileID: 669975174}
 --- !u!1 &155338996
@@ -18947,12 +18947,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DEBUG_DISABLE_START: 0
-  enemySpawnsPerWave: 05000000060000000800000009000000090000000a0000000c0000000c0000000e0000000f000000
-  maxEnemiesAlive: 10
+  enemySpawnsPerWave: 0500000006000000080000000a0000000c0000000c0000000e000000100000001000000011000000
+  maxEnemiesAlive: 12
   enemiesLeftForMarker: 3
-  timeBetweenSpawnsInSecs: 5
+  timeBetweenSpawnsInSecs: 4
   timeBetweenWavesInSecs: 15
-  tomatoesToGameOver: 50
+  tomatoesToGameOver: 25
   player: {fileID: 2131785000}
   itemSpawners:
   - {fileID: 1640844547}
@@ -18969,9 +18969,9 @@ MonoBehaviour:
   gameOverCanvas: {fileID: 1323591131}
   gameOverSound: {fileID: 8300000, guid: 6a8f4ecaeb9da1542bf4dcd7e82ce7ca, type: 3}
   spawnChances:
-    plowChance: 0.45
-    sowChance: 0.35
-    waterChance: 0.2
+    plowChance: 0.5
+    sowChance: 0.4
+    waterChance: 0.1
   extraEnemiesPerWave: 1
 --- !u!82 &887174443
 AudioSource:

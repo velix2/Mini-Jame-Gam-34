@@ -22,6 +22,7 @@ public class ItemSpawner : MonoBehaviour
         _numberOfItemsSpawned = 0;
         progressBarInWorld.SetMaxValue(_numberOfItemsCurrentWave);
         progressBarInWorld.SetValue(_numberOfItemsCurrentWave);
+        _currentItem = null;
         CreateItem();
     }
 

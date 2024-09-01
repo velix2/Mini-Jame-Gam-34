@@ -180,6 +180,15 @@ public class FieldHandler : MonoBehaviour
         seed.Water();
         fieldMap.SetTile(gridPosition, fieldTileWateredPrefab);
     }
+    
+    public bool IsSeedAtCellDead(Vector3Int gridPosition)
+    {
+        if (!_seeds.ContainsKey(gridPosition))
+        {
+            return false;
+        }
+        return _seeds[gridPosition].IsDead;
+    }
 
     public void TrampleFieldAtWorldPos(Vector3 position)
     {

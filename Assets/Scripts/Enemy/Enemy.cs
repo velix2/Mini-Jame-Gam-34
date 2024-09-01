@@ -276,9 +276,12 @@ public abstract class Enemy : MonoBehaviour
         
         if (Vector2.Distance(transform.position, _targetHarvestWorldPosition) < 0.1f)
         {
+            if (!FieldHandler.Instance.IsSeedAtCellDead(_targetHarvestCellPosition))
+            {
+                GameHandler.Instance.SubmitTomatoes(1);            
+            }
+
             FieldHandler.Instance.RemoveSeed(_targetHarvestCellPosition);
-            GameHandler.Instance.SubmitTomatoes(1);
-            
             //Now 50-50 chance to return to base or continue harvesting
             if (UnityEngine.Random.value > 0.5f)
             {

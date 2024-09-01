@@ -113,6 +113,7 @@ public class Seed : MonoBehaviour
     }
 
     public GrowthStages GrowthStage => _growthStage;
+    public bool IsDead => _growthStage == GrowthStages.Dead;
 
     public void Highlight()
     {
