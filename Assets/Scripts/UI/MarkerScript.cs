@@ -16,11 +16,14 @@ public class MarkerScript : MonoBehaviour
         _camera1 = Camera.main;
     }
 
+    //TODO. Improve this
     private void Update()
     {
-        var coords = _camera1.WorldToScreenPoint(target.position);
-        var clamped = new Vector2(Mathf.Clamp(coords.x, 0.08f * Screen.width, 0.92f * Screen.width), 
-            Mathf.Clamp(coords.y, 0.1f * Screen.height, 0.9f* Screen.height) );
+        var coords = _camera1.WorldToViewportPoint(target.position);
+        float scale = 1920f / Screen.width;
+        coords = new Vector3(coords.x * Screen.width, coords.y * Screen.height, 0) * scale;
+        var clamped = new Vector2(Mathf.Clamp(coords.x, 0.08f * Screen.width * scale, 0.92f * Screen.width * scale), 
+            Mathf.Clamp(coords.y, 0.1f * Screen.height * scale, 0.9f* Screen.height * scale) );
         _rectTransform.anchoredPosition = clamped;
         rotationTarget.rotation = Quaternion.LookRotation(Vector3.forward, coords - (Vector3) clamped);
     }
