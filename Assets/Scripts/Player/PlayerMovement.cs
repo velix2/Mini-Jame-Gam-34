@@ -268,13 +268,13 @@ public class PlayerMovement : MonoBehaviour
             return;
         }
 
-        if (_rb.velocity.magnitude < 0.1f && _currentItemType == ItemType.None && !_isTrampling && Input.GetKeyDown(KeyCode.LeftControl))
+        if (_rb.velocity.magnitude < 0.1f && _currentItemType == ItemType.None && !_isTrampling && Input.GetKeyDown(KeyCode.Q))
         {
             _isTrampling = true;
             animator.SetBool(IsTrampling, true);
             _trampleCoroutine = StartCoroutine(AwaitTrampleEnd());
         }
-        else if (_isTrampling && Input.GetKeyUp(KeyCode.LeftControl))
+        else if (_isTrampling && Input.GetKeyUp(KeyCode.Q))
         {
             _isTrampling = false;
             animator.SetBool(IsTrampling, false);
